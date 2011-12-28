@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Video App</title>
+    
+    <!-- STYLES -->
+    <link rel="stylesheet" href="/core/css/reset.css">
+    <link rel="stylesheet" href="/core/css/style.css">
+    <link rel="stylesheet" href="/core/css/components/grid.css">
+    <link rel="stylesheet" href="/core/css/components/header.css">
+    <link rel="stylesheet" href="/core/css/components/search.css">
+    <link rel="stylesheet" href="/core/css/components/channel.css">
+    <link rel="stylesheet" href="/core/css/components/html5player.css">
+    <link rel="stylesheet" href="/core/css/components/shows.css">
+    <link rel="stylesheet" href="/core/css/components/footer.css">
+    <link rel="stylesheet" href="/core/css/components/subscriptions.css">
+    <!-- END STYLES -->
+    <link rel="stylesheet" href="/themes/os/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="/core/js/libs/innershiv.js"></script>
+    <![endif]-->
+    <script src="/core/js/libs/modernizr.js"></script>
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/TODO-ChromeWebStoreURL">
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header id="header" data-controller="gva.controller.HeaderController">
+      <h1><a href="/" title="Google Video App">Google Video App</a></h1>
+      <form id="search-form" data-component="gva.component.SearchForm">
+        <input name="search" type="text" value="Search" class="placeholder"/>
+        <input type="submit" value="Go">
+        <input type="reset" value="Reset">
+      </form>
+    </header>
+    
+    
+    <noscript>
+      <div class="no-js screen">
+        <div class="header"><h1>
+          <h1><a href="/" title="Google Video App">Google Video App</a></h1>
+        </div>
+        <div class="wrapper">
+          <div class="figure"><span class="icon"></span></div>
+          <div class="article">
+            <h3 class="large">Sad panda!</h3>
+            <p>Unfortunately your browser can't navigate this website without javascript...</p>
+            <p class="small">and he's getting wet.</p>
+            <div class="nav">
+              <a href="http://www.google.com/chrome" target="_blank">Upgrade your browser</a>            
+            </div>
+          </div>
+        </div>
+      </div>
+    </noscript>
+    
+    <div id="install-screen" class="install screen">
+      <div class="header">
+        <h1><a href="/" title="Google Video App">Google Video App</a></h1>
+      </div>
+      <div class="wrapper">
+        <figure><span class="icon"></span></figure>
+        <article>
+          <h3 class="large">Sad panda!</h3>
+          <p>Unfortunately your browser is too old...</p>
+          <p class="small">and he's getting wet.</p>
+          <nav>
+            <a href="http://www.google.com/chrome" target="_blank">Upgrade your browser</a>            
+          </nav>
+        </article>
+      </div>
+    </div>
+    
+    <div class="load-screen">
+      <div><span class="icon"></span></div>
+    </div>
+    <div class="chrome-store-popup">
+      <div>close button</div>
+      <article>
+        <figure></figure>
+        <p>This app is available in the <strong>Chrome Web Store</strong><br />
+        and provides additional features like notifications.</p>
+        <nav>
+          <a id="cws-detail-page" target="_blank">Learn more</a>
+          <a id="do-inline-install">Add to Chrome</a>
+        </nav>
+      </article>
+    </div>
+    
+    <!-- SECTIONS -->
+    <section id="sections">
+      <!-- Home -->
+      <section id="home" data-slug="home" data-controller="gva.controller.ChannelController">
+        <section id="channel" class="expanded" data-component="gva.component.Channel">
+          <header>
+            <h2>Your Channel</h2>
+            <div class="sort">
+                <a class="show-sort grouped" href="#" data-sortby="show"><span class="icon"></span>Group by Show</a>
+                <a class="airdate-sort" href="#" data-sortby="airdate">Sort by Date<span class="icon"></span></a>
+            </div>
+          </header>
+          
+          <div class="channel-scroll"> 
+            <div class="scroll-button up"><span class="icon"></span></div>
+            <div id="channel-slider" class="goog-slider-vertical">   
+							<div class="bar-knob goog-slider-thumb">
+							  <span class="knob-graphic"></span>
+							</div> 
+					  </div> 
+					  <div class="scroll-button"><span class="icon"></span></div>
+					</div>
+					
+          <section id="episode-list">
+            <ul></ul>
+            <div class="preload"></div>
+          </section>
+          <div class="toggle"><span class="icon"></span></div>
+        </section>
+        <section id="video-player" data-component="gva.component.VideoPlayer">
+          <div class="sharing">
+            <nav>
+              <a href="#" class="twitter"><span class="icon"></span>Share on Twitter</a>
+              <a href="#" class="facebook"><span class="icon"></span>Share on Facebook</a>
+              <a href="#" class="google"><div class="g-plusone" data-size="small" data-annotation="none"></div>Post on Google+</a>
+            </nav>
+            <a href="#" class="menu"><span class="icon"></span>Share</a>
+          </div>
+        </section>
+      </section>
+      <!-- Shows -->
+      <section id="shows" data-slug="shows" data-controller="gva.controller.ShowController">
+        <section class="overview">
+          <header>
+            <h2>Categories</h2>
+          </header>
+          <section class="show-grid grid" data-component="gva.component.ShowGrid"></section>
+        </section>
+        <section class="details">
+          <a href="#" class="back">Back</a>
+          <header>
+            <h2>Episodes</h2>
+          </header>
+          <section class="show-details" data-component="gva.component.ShowDetails">
+            <nav class="details-nav">
+              <a href="#" class="subscribe">Subscribe</a>
+              <a href="#about" class="tab">About this Show</a>
+              <a href="#share" class="tab share">Share</a>
+            </nav>
+            <section class="about">
+              <article>
+              </article>
+            </section>
+            <section class="share">
+              <article>
+                <a href="#" class="twitter"><span class="icon"></span>Share on Twitter</a>
+                <a href="#" class="facebook"><span class="icon"></span>Share on Facebook</a>
+                <a href="#" class="google"><div class="g-plusone" data-size="small" data-annotation="none"></div>Post on Google+</a>
+              </article>
+            </section>
+          </section>
+	        <section class="episode-grid grid" data-component="gva.component.EpisodeGrid"></section>
+        </section>
+      </section>
+      <!-- Search Results --> 
+      <section id="search" data-slug="search" data-controller="gva.controller.SearchController">
+        <header>
+          <h2>Search Results for &hellip;</h2>
+        </header>
+        <section class="search-grid grid" data-component="gva.component.SearchGrid"></section>
+      </section>
+    </section>
+    <!-- FOOTER -->
+    <footer id="footer" data-controller="gva.controller.FooterController">
+      <nav id="section-menu" data-component="gva.component.SectionMenu">
+        <a href="/home" class="home default" title="Home"><span class="icon home"></span>Home</a>
+        <a href="/shows" class="shows" title="Shows"><span class="icon shows"></span>Categories</a>
+      </nav>
+      <section id="subscriptions" data-component="gva.component.Subscriptions" data-controller="gva.controller.SubscriptionsController">
+        <section class="menu">
+          <div class="your-subscriptions">
+            <span class="icon"></span>Your subscriptions<span class="count">0</span>
+          </div>
+          <div class="action-indicator">
+            <p><span class="icon"></span><span class="status">Drop shows here to subscribe</span></p>
+          </div>
+        </section>
+        <section class="grid-wrap">
+          <nav class="pagination">
+            <a href="#" class="prev">Previous Page<span class="icon"></span></a>
+            <a href="#" class="next">Next Page<span class="icon"></span></a>
+          </nav>
+          <div class="grid"></div>
+        </section>
+      </section>
+    </footer>
+    <!-- IE history elements -->
+    <input class="ie-history" type="hidden" name="ie-history" value="" />
+    <iframe class="ie-history" src="" width="0" height="0" style="display: none;"></iframe>
+    <script src="/core/js/libs/swfobject.js"></script>
+    <!-- SCRIPTS -->
+    <script src="/core/js/libs/closure-library/closure/goog/base.js"></script>
+    <script src="/core/js/deps.js"></script>
+    <script src="/core/js/gva/gva.js"></script>
+    <!-- END SCRIPTS -->
+    <script> 
+    gva.bootstrap.initialize();
+    </script>
+    <script type="text/javascript">    
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      //TODO: Update Google Analytics ID
+      _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
+      _gaq.push(['_setDomainName', 'vidplayerdemo.appspot.com']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackPageLoadTime']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>

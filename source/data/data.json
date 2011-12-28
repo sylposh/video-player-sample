@@ -1,0 +1,135 @@
+{
+	"categories" : [{
+		"id"          : "C001",
+		"title"       : "Example Category 1",
+		"description" : "This is an example category",
+		"image_url"   : "",
+		"episodes"    : [{
+			"id"          : "E001",
+			"title"       : "An example episode 001",
+			"description" : "A description of example episode 001",
+			"image_url"   : "/data/videos/sample_thumbs/thumb1.png",
+			"airdate"     : "08/09/2011 10:55:50 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/sample-001.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/sample-001.ogg",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/sample-001.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/sample-001.mp4"
+				}
+		},{
+			"id"          : "E002",
+			"title"       : "An example episode 002",
+			"description" : "A description of example episode 002",
+			"image_url"   : "/data/videos/sample_thumbs/thumb2.png",
+			"airdate"     : "08/09/2011 10:50:49 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/sample-002.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/sample-002.ogg",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/sample-002.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/sample-002.mp4"
+				}
+		},{
+			"id"          : "E003",
+			"title"       : "An example episode 003",
+			"description" : "A description of example episode 003",
+			"image_url"   : "/data/videos/sample_thumbs/thumb2.png",
+			"airdate"     : "08/09/2011 10:50:49 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/sample-002.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/sample-002.ogg",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/sample-002.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/sample-002.mp4"
+				}
+		},{
+			"id"          : "E004",
+			"title"       : "An example episode 004",
+			"description" : "A description of example episode 004",
+			"image_url"   : "/data/videos/sample_thumbs/thumb2.png",
+			"airdate"     : "08/09/2011 10:50:49 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/sample-002.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/sample-002.ogg",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/sample-002.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/sample-002.mp4"
+				}
+		}]
+	},{
+	"id"          : "C002",
+	"title"       : "Another Example",
+	"description" : "This is an example category",
+	"image_url"   : "",
+	"episodes"    : [{
+		"id"          : "E005",
+		"title"       : "An example episode 005",
+		"description" : "A description of example episode 005",
+		"image_url"   : "/data/videos/sample_thumbs/thumb3.png",
+		"airdate"     : "08/11/2011 8:23:44 UTC+0200",
+		"runtime"     : "10:00",
+		"video_html"  : [{
+				"path" : "/data/videos/sample-003.webm",
+				"type" : "webm"
+			},{
+				"path" : "/data/videos/sample-003.ogg",
+				"type" : "ogg"
+			},{
+				"path" : "/data/videos/sample-003.mp4",
+				"type" : "h264"
+			}],
+		"video_flash" : {
+				"path" : "/data/videos/sample-003.mp4"
+			}
+	},{
+			"id"          : "E006",
+			"title"       : "An example episode 006",
+			"description" : "A description of example episode 006",
+			"image_url"   : "/data/videos/sample_thumbs/thumb2.png",
+			"airdate"     : "08/09/2011 10:50:49 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/sample-002.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/sample-002.ogg",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/sample-002.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/sample-002.mp4"
+				}
+		}]
+}]
+}

@@ -1,0 +1,500 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span> Copyright 2011 Google
+<span class='line'>  3</span> 
+<span class='line'>  4</span> Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'>  5</span> you may not use this file except in compliance with the License.
+<span class='line'>  6</span> You may obtain a copy of the License at
+<span class='line'>  7</span> 
+<span class='line'>  8</span>     http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'>  9</span> 
+<span class='line'> 10</span> Unless required by applicable law or agreed to in writing, software
+<span class='line'> 11</span> distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 12</span> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 13</span> See the License for the specific language governing permissions and
+<span class='line'> 14</span> limitations under the License.
+<span class='line'> 15</span> */</span><span class="WHIT">
+<span class='line'> 16</span> 
+<span class='line'> 17</span> </span><span class="COMM">/**
+<span class='line'> 18</span>  * Provide a namespace for this class
+<span class='line'> 19</span>  */</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="NAME">goog.provide</span><span class="PUNC">(</span><span class="STRN">'gva.component.SearchForm'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="COMM">/**
+<span class='line'> 23</span>  * Import dependencies
+<span class='line'> 24</span>  */</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom.dataset'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom.forms'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.events'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.events.EventType'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.events.KeyCodes'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.style'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.component.BaseComponent'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.easing'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.model.DataModel'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> 
+<span class='line'> 36</span> 
+<span class='line'> 37</span> </span><span class="COMM">/**
+<span class='line'> 38</span>  * @constructor
+<span class='line'> 39</span>  * @extends {gva.component.BaseComponent}
+<span class='line'> 40</span>  */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="NAME">gva.component.SearchForm</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 42</span> 
+<span class='line'> 43</span> </span><span class="WHIT">    </span><span class="NAME">this._$searchInput</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">    </span><span class="NAME">this._$searchReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">    </span><span class="NAME">this._$selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="NAME">this._$results</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="NAME">this._$info</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="NAME">this._placeholder</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="NAME">this._lastQuery</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="NAME">this._callbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> 
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="COMM">// The height of each result item.</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_LI_HEIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">101</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> 
+<span class='line'> 55</span> </span><span class="WHIT">    </span><span class="COMM">// The height of the num results info and padding.</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_BASE_HEIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">52</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> 
+<span class='line'> 58</span> </span><span class="WHIT">    </span><span class="COMM">// The difference between the base height and the base offsetHeight</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_BASE_OFFSET</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">13</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> 
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="COMM">// Additional height from 12px margin added when 1 or more results found.</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_BOTTOM_MARGIN</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">12</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 63</span> 
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="COMM">// Additional 40px 'more' link added when more than 6 results are found.</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_MORE_HEIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">40</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> 
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="COMM">// Width of results drop down.</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_WIDTH</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">319</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> 
+<span class='line'> 70</span> </span><span class="WHIT">    </span><span class="NAME">this.RESULT_ANIMATION_DURATION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">250</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> 
+<span class='line'> 72</span> </span><span class="WHIT">    </span><span class="COMM">// Maximum number of results to display in dropdown results.</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="NAME">this.MAX_LIVE_RESULTS</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">6</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> 
+<span class='line'> 75</span> </span><span class="WHIT">    </span><span class="COMM">// Call super constructor</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="NAME">gva.component.BaseComponent.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> 
+<span class='line'> 79</span> 
+<span class='line'> 80</span> </span><span class="COMM">/**
+<span class='line'> 81</span>  * Extend gva.component.BaseComponent
+<span class='line'> 82</span>  */</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="NAME">goog.inherits</span><span class="PUNC">(</span><span class="NAME">gva.component.SearchForm</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">gva.component.BaseComponent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 84</span> 
+<span class='line'> 85</span> 
+<span class='line'> 86</span> </span><span class="COMM">/**
+<span class='line'> 87</span>  * @inheritDoc
+<span class='line'> 88</span>  */</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="NAME">gva.component.SearchForm.prototype.initialize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$context</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> </span><span class="WHIT">    </span><span class="COMM">// Call super method.</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">    </span><span class="NAME">this.constructor.superClass_.initialize.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$context</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> 
+<span class='line'> 94</span> </span><span class="WHIT">    </span><span class="NAME">this.callbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">            </span><span class="NAME">onKeyUp</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onKeyUp</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">            </span><span class="NAME">onInputChange</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onInputChange</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">            </span><span class="NAME">onFormSubmit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onFormSubmit</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">            </span><span class="NAME">onSearchFocus</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onSearchFocus</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">            </span><span class="NAME">onSearchBlur</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onSearchBlur</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">            </span><span class="NAME">onEpisodeClicked</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onEpisodeClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">            </span><span class="NAME">onResetClicked</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onResetClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">            </span><span class="NAME">onShowClicked</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onShowClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">            </span><span class="NAME">handleClick</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.handleClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>105</span> 
+<span class='line'>106</span> </span><span class="WHIT">    </span><span class="COMM">// Grab the search input element</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">    </span><span class="NAME">this._$searchInput</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'input[name="search"]'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.$context</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>108</span> 
+<span class='line'>109</span> </span><span class="WHIT">    </span><span class="COMM">// Grab the reset button</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">    </span><span class="NAME">this._$searchReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'input[type="reset"]'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.$context</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> 
+<span class='line'>112</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for arrow key events on form</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.KEYUP</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onKeyUp</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>114</span> 
+<span class='line'>115</span> </span><span class="WHIT">    </span><span class="COMM">// Listen the form events</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.KEYUP</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onInputChange</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.SUBMIT</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onFormSubmit</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>118</span> 
+<span class='line'>119</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for focus / blur events for setting place holder text</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.FOCUSIN</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onSearchFocus</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.FOCUSOUT</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onSearchBlur</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> 
+<span class='line'>123</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for clicks on the reset button</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$searchReset</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onResetClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>125</span> 
+<span class='line'>126</span> </span><span class="WHIT">    </span><span class="COMM">// Use the initial value of the search input as the place holder</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">    </span><span class="NAME">this._placeholder</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.forms.getValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> 
+<span class='line'>129</span> </span><span class="WHIT">    </span><span class="COMM">// Build the results container</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">    </span><span class="NAME">this.initResults</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> 
+<span class='line'>133</span> 
+<span class='line'>134</span> </span><span class="COMM">/**
+<span class='line'>135</span>  * Builds the drop down results container.
+<span class='line'>136</span>  */</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="NAME">gva.component.SearchForm.prototype.initResults</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>138</span> 
+<span class='line'>139</span> </span><span class="WHIT">    </span><span class="NAME">this._$info</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.htmlToDocumentFragment</span><span class="PUNC">(</span><span class="STRN">'&lt;li class="info">Hello&lt;/li>'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">    </span><span class="NAME">this._$results</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.htmlToDocumentFragment</span><span class="PUNC">(</span><span class="STRN">'&lt;ul class="results">&lt;/ul>'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> 
+<span class='line'>142</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$info</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>144</span> 
+<span class='line'>145</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> 
+<span class='line'>148</span> 
+<span class='line'>149</span> </span><span class="COMM">/**
+<span class='line'>150</span>  * Creates a DOM element for an episode result list item.
+<span class='line'>151</span>  * @param {gva.vo.Episode} episode The data for the result item.
+<span class='line'>152</span>  * @return {Element} The element for the episode's entry in the results list.
+<span class='line'>153</span>  */</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="NAME">gva.component.SearchForm.prototype.makeResult</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">episode</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>155</span> 
+<span class='line'>156</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showSlug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.util.StringUtil.slugify</span><span class="PUNC">(</span><span class="NAME">episode.show_title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">episodeSlug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.util.StringUtil.slugify</span><span class="PUNC">(</span><span class="NAME">episode.title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">episodeText</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.util.StringUtil.stripTags</span><span class="PUNC">(</span><span class="NAME">episode.text</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">    </span><span class="NAME">episodeText</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.util.StringUtil.singleSentence</span><span class="PUNC">(</span><span class="NAME">episodeText</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">15</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">60</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> 
+<span class='line'>161</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">markup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;li>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;div>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;a class="episode" href="/home/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.slug</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'" title="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'" data-episodeid="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'">'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">                </span><span class="STRN">'&lt;img src="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.image_url</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'"/>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">                </span><span class="STRN">'&lt;strong>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/strong>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">                </span><span class="STRN">'&lt;em>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episodeText</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/em>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">             </span><span class="STRN">'&lt;/a>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">             </span><span class="STRN">'&lt;a class="show" href="/shows/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">showSlug</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/" title="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.show_title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'">'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episode.show_title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/a>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">             </span><span class="STRN">'&lt;/div>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;/li>'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>172</span> 
+<span class='line'>173</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">goog.dom.htmlToDocumentFragment</span><span class="PUNC">(</span><span class="NAME">markup</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> 
+<span class='line'>176</span> 
+<span class='line'>177</span> </span><span class="COMM">/**
+<span class='line'>178</span>  * Empties episode results from drop down.
+<span class='line'>179</span>  */</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="NAME">gva.component.SearchForm.prototype.clearResults</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>181</span> 
+<span class='line'>182</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$children</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.getChildren</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">callbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.callbacks</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> 
+<span class='line'>185</span> </span><span class="WHIT">    </span><span class="COMM">// Remove children and event handlers</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">    </span><span class="NAME">goog.array.forEach</span><span class="PUNC">(</span><span class="NAME">$children</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$element</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> 
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="NAME">$episodeLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.episode'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$element</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">        </span><span class="NAME">$showLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.show'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$element</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> 
+<span class='line'>191</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">$episodeLink</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="STRN">'undefined'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">            </span><span class="NAME">goog.events.unlisten</span><span class="PUNC">(</span><span class="NAME">$episodeLink</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callbacks.onEpisodeClicked</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">            </span><span class="NAME">goog.events.unlisten</span><span class="PUNC">(</span><span class="NAME">$showLink</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callbacks.onShowClicked</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.removeChildren</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> 
+<span class='line'>200</span> 
+<span class='line'>201</span> </span><span class="COMM">/**
+<span class='line'>202</span>  * Event handler for when the search input is focused.
+<span class='line'>203</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>204</span>  */</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="NAME">gva.component.SearchForm.prototype.onSearchFocus</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> 
+<span class='line'>207</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.forms.getValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>208</span> 
+<span class='line'>209</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">this._placeholder</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.forms.setValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'placeholder'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> 
+<span class='line'>215</span> 
+<span class='line'>216</span> </span><span class="COMM">/**
+<span class='line'>217</span>  * Event handler for when the search input is blurred.
+<span class='line'>218</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>219</span>  */</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="NAME">gva.component.SearchForm.prototype.onSearchBlur</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>221</span> 
+<span class='line'>222</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.forms.getValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>223</span> 
+<span class='line'>224</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value.replace</span><span class="PUNC">(</span><span class="REGX">/\s+/g</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">length</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.forms.setValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Search'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'placeholder'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> 
+<span class='line'>230</span> 
+<span class='line'>231</span> </span><span class="COMM">/**
+<span class='line'>232</span>  * Event handler for keyUp events while typing in the search input.
+<span class='line'>233</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>234</span>  */</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="NAME">gva.component.SearchForm.prototype.onKeyUp</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>236</span> 
+<span class='line'>237</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>238</span> 
+<span class='line'>239</span> </span><span class="WHIT">    </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event.keyCode</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>240</span> 
+<span class='line'>241</span> </span><span class="WHIT">        </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">goog.events.KeyCodes.UP</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>242</span> 
+<span class='line'>243</span> </span><span class="WHIT">            </span><span class="COMM">// If no results are selected, focus the first result</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._$selected</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>245</span> 
+<span class='line'>246</span> </span><span class="WHIT">                </span><span class="COMM">// Down go up further than the first result</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._$selected.previousSibling</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">this._$info</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>250</span> 
+<span class='line'>251</span> </span><span class="WHIT">                </span><span class="COMM">// Select the previous result</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._$selected.previousSibling</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">                    </span><span class="NAME">this._$selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._$selected.previousSibling</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>256</span> 
+<span class='line'>257</span> </span><span class="WHIT">            </span><span class="COMM">// Focus the first link inside the result</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$selected</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>259</span> 
+<span class='line'>260</span> </span><span class="WHIT">            </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> 
+<span class='line'>262</span> </span><span class="WHIT">        </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">goog.events.KeyCodes.DOWN</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>263</span> 
+<span class='line'>264</span> </span><span class="WHIT">            </span><span class="COMM">// If no results are selected, focus the first result</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this._$selected</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">                </span><span class="NAME">this._$selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.getChildren</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>267</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>268</span> 
+<span class='line'>269</span> </span><span class="WHIT">                </span><span class="COMM">// Select the next result</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._$selected.nextSibling</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">                    </span><span class="NAME">this._$selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._$selected.nextSibling</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>274</span> 
+<span class='line'>275</span> </span><span class="WHIT">            </span><span class="COMM">// Focus the first link inside the result</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$selected</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">focus</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> 
+<span class='line'>278</span> </span><span class="WHIT">            </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>281</span> 
+<span class='line'>282</span> 
+<span class='line'>283</span> </span><span class="COMM">/**
+<span class='line'>284</span>  * Event handler for when the search input value changes.
+<span class='line'>285</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>286</span>  */</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="NAME">gva.component.SearchForm.prototype.onInputChange</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> 
+<span class='line'>289</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.forms.getValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>290</span> 
+<span class='line'>291</span> </span><span class="WHIT">    </span><span class="COMM">// Show / hide the reset toggle</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.setStyle</span><span class="PUNC">(</span><span class="NAME">this._$searchReset</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'opacity'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">''</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'0'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'1'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>293</span> 
+<span class='line'>294</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">query.replace</span><span class="PUNC">(</span><span class="REGX">/\s+/g</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">length</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">        </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>298</span> 
+<span class='line'>299</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._lastQuery</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">this._lastQuery</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>302</span> 
+<span class='line'>303</span> </span><span class="WHIT">    </span><span class="NAME">this._lastQuery</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">query</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>304</span> 
+<span class='line'>305</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">model</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.model.DataModel.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">results</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">model.searchEpisodes</span><span class="PUNC">(</span><span class="NAME">query</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>307</span> 
+<span class='line'>308</span> </span><span class="WHIT">    </span><span class="NAME">this.clearResults</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">    </span><span class="COMM">// Remove current results</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">    </span><span class="COMM">//goog.dom.removeChildren(this._$results);</span><span class="WHIT">
+<span class='line'>311</span> 
+<span class='line'>312</span> </span><span class="WHIT">    </span><span class="COMM">// Append results heading</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.append</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$info</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.setTextContent</span><span class="PUNC">(</span><span class="NAME">this._$info</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">results.length</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">' Results'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>315</span> 
+<span class='line'>316</span> </span><span class="WHIT">    </span><span class="COMM">// Add some results</span><span class="WHIT">
+<span class='line'>317</span> 
+<span class='line'>318</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$result</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$showLink</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$episodeLink</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.min</span><span class="PUNC">(</span><span class="NAME">this.MAX_LIVE_RESULTS</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">results.length</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>322</span> 
+<span class='line'>323</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">count</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">        </span><span class="NAME">$result</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.makeResult</span><span class="PUNC">(</span><span class="NAME">results</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>325</span> 
+<span class='line'>326</span> </span><span class="WHIT">        </span><span class="COMM">// Initialize buttons</span><span class="WHIT">
+<span class='line'>327</span> </span><span class="WHIT">        </span><span class="NAME">$episodeLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.episode'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$result</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">        </span><span class="NAME">$showLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.show'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$result</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>329</span> 
+<span class='line'>330</span> </span><span class="WHIT">        </span><span class="COMM">// Bind event handlers to the object</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">        </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$episodeLink</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onEpisodeClicked</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">        </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$showLink</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onShowClicked</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> 
+<span class='line'>334</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.append</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$result</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>336</span> 
+<span class='line'>337</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">results.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">6</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">      </span><span class="COMM">// Add "more" link to results page.</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$more</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.htmlToDocumentFragment</span><span class="PUNC">(</span><span class="STRN">'&lt;li class="more">&lt;a href="#">More...&lt;/a>&lt;/li>'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">      </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$more</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.onFormSubmit</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>341</span> 
+<span class='line'>342</span> </span><span class="WHIT">      </span><span class="NAME">goog.dom.append</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$more</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>344</span> 
+<span class='line'>345</span> </span><span class="WHIT">    </span><span class="COMM">// Reveal results.</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">startHeight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._$results.offsetHeight</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">this.RESULT_BASE_OFFSET</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> 
+<span class='line'>348</span> </span><span class="WHIT">    </span><span class="COMM">// Make visible before animation.</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">initialReveal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">goog.style.isElementShown</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>351</span> 
+<span class='line'>352</span> 
+<span class='line'>353</span> </span><span class="WHIT">    </span><span class="COMM">// Calculate the ending height for the result animation.</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">endHeight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="NAME">this.RESULT_LI_HEIGHT</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">    </span><span class="NAME">endHeight</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">endHeight</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">this.RESULT_BOTTOM_MARGIN</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">    </span><span class="NAME">endHeight</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">results.length</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">6</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">this.RESULT_MORE_HEIGHT</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">    </span><span class="NAME">endHeight</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.RESULT_BASE_HEIGHT</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>358</span> 
+<span class='line'>359</span> 
+<span class='line'>360</span> </span><span class="WHIT">    </span><span class="COMM">// Animate height change if different.</span><span class="WHIT">
+<span class='line'>361</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">startHeight</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">endHeight</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>362</span> 
+<span class='line'>363</span> </span><span class="WHIT">      </span><span class="COMM">// Hide inner list elements hidden before animating.</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">      </span><span class="NAME">this.toggleResultDisplay</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">initialReveal</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>365</span> 
+<span class='line'>366</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">anim</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.fx.dom.Resize</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="WHIT">        </span><span class="PUNC">[</span><span class="NAME">this.RESULT_WIDTH</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">startHeight</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>368</span> </span><span class="WHIT">        </span><span class="PUNC">[</span><span class="NAME">this.RESULT_WIDTH</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">endHeight</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>369</span> </span><span class="WHIT">        </span><span class="NAME">this.RESULT_ANIMATION_DURATION</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>370</span> </span><span class="WHIT">        </span><span class="NAME">gva.easing.quintic.easeOut</span><span class="WHIT">
+<span class='line'>371</span> </span><span class="WHIT">      </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>372</span> 
+<span class='line'>373</span> </span><span class="WHIT">      </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">anim</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.Transition.EventType.END</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">        </span><span class="NAME">this.toggleResultDisplay</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>376</span> 
+<span class='line'>377</span> </span><span class="WHIT">      </span><span class="NAME">anim.play</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>379</span> 
+<span class='line'>380</span> 
+<span class='line'>381</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for closing clicks.</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.unlisten</span><span class="PUNC">(</span><span class="NAME">window</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.handleClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">window</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.handleClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>384</span> 
+<span class='line'>385</span> </span><span class="WHIT">    </span><span class="COMM">// Deselect results</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="WHIT">    </span><span class="NAME">this._$selected</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>388</span> 
+<span class='line'>389</span> </span><span class="COMM">/**
+<span class='line'>390</span>  * Toggles the display of each li element in the results list to block or none.
+<span class='line'>391</span>  * @param {Boolean} display True to display block, false for none.
+<span class='line'>392</span>  * @param {Boolean} skipIntro True to ignore the first li (which shows the num results).
+<span class='line'>393</span>  */</span><span class="WHIT">
+<span class='line'>394</span> </span><span class="NAME">gva.component.SearchForm.prototype.toggleResultDisplay</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">display</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">skipIntro</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>395</span> 
+<span class='line'>396</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">displayStyle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">display</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'block'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'none'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>397</span> 
+<span class='line'>398</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$resultItems</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.getElementsByTagNameAndClass</span><span class="PUNC">(</span><span class="STRN">'li'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$results</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>399</span> 
+<span class='line'>400</span> </span><span class="WHIT">  </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$resultItems.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>401</span> 
+<span class='line'>402</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">skipIntro</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">      </span><span class="KEYW">continue</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>404</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>405</span> 
+<span class='line'>406</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.setStyle</span><span class="PUNC">(</span><span class="NAME">$resultItems</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'display'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">displayStyle</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>409</span> 
+<span class='line'>410</span> </span><span class="COMM">/**
+<span class='line'>411</span>  * Event handler for when the reset button is clicked
+<span class='line'>412</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>413</span>  */</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="NAME">gva.component.SearchForm.prototype.onResetClicked</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>415</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>416</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.forms.setValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>417</span> </span><span class="WHIT">    </span><span class="NAME">this.onInputChange</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">    </span><span class="NAME">this.onSearchBlur</span><span class="PUNC">(</span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>420</span> 
+<span class='line'>421</span> </span><span class="COMM">/**
+<span class='line'>422</span>  * Event handler for when a show link is clicked
+<span class='line'>423</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>424</span>  */</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="NAME">gva.component.SearchForm.prototype.onShowClicked</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>426</span> 
+<span class='line'>427</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>428</span> 
+<span class='line'>429</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">event.currentTarget</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'title'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>431</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">slug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'href'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>432</span> 
+<span class='line'>433</span> </span><span class="WHIT">    </span><span class="NAME">gva.controller.ApplicationController.navigate</span><span class="PUNC">(</span><span class="NAME">slug</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>434</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>435</span> 
+<span class='line'>436</span> </span><span class="COMM">/**
+<span class='line'>437</span>  * Event handler for when an episode link is clicked
+<span class='line'>438</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>439</span>  */</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="NAME">gva.component.SearchForm.prototype.onEpisodeClicked</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>441</span> 
+<span class='line'>442</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>443</span> 
+<span class='line'>444</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">event.currentTarget</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'title'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">slug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'href'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>447</span> 
+<span class='line'>448</span> </span><span class="WHIT">    </span><span class="NAME">gva.controller.ApplicationController.navigate</span><span class="PUNC">(</span><span class="NAME">slug</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>450</span> 
+<span class='line'>451</span> 
+<span class='line'>452</span> </span><span class="COMM">/**
+<span class='line'>453</span>  * Event handler for when the search input is submitted.
+<span class='line'>454</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>455</span>  */</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="NAME">gva.component.SearchForm.prototype.onFormSubmit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>457</span> 
+<span class='line'>458</span> </span><span class="WHIT">    </span><span class="COMM">// Stop default form behavior</span><span class="WHIT">
+<span class='line'>459</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>460</span> 
+<span class='line'>461</span> </span><span class="WHIT">    </span><span class="COMM">// Grab the query from the search field</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">query</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.forms.getValue</span><span class="PUNC">(</span><span class="NAME">this._$searchInput</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>463</span> 
+<span class='line'>464</span> </span><span class="WHIT">    </span><span class="COMM">// Close results view.</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>466</span> 
+<span class='line'>467</span> </span><span class="WHIT">    </span><span class="COMM">// Go to the search results page</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">    </span><span class="NAME">gva.controller.ApplicationController.navigate</span><span class="PUNC">(</span><span class="STRN">'/search/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">query</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>470</span> 
+<span class='line'>471</span> 
+<span class='line'>472</span> </span><span class="COMM">/**
+<span class='line'>473</span>  * Event handler for all clicks that collapses the component when clicking outside of it.
+<span class='line'>474</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>475</span>  */</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="NAME">gva.component.SearchForm.prototype.handleClick</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>477</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">resultsAncestor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.getAncestorByClass</span><span class="PUNC">(</span><span class="NAME">event.target</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'results'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">isLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.classes.has</span><span class="PUNC">(</span><span class="NAME">event.target</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'episode'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">goog.dom.classes.has</span><span class="PUNC">(</span><span class="NAME">event.target.parentNode</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'episode'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">goog.dom.classes.has</span><span class="PUNC">(</span><span class="NAME">event.target</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'show'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>479</span> 
+<span class='line'>480</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">resultsAncestor</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">isLink</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>481</span> </span><span class="WHIT">    </span><span class="COMM">// Close results view.</span><span class="WHIT">
+<span class='line'>482</span> </span><span class="WHIT">    </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">this._$results</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>483</span> 
+<span class='line'>484</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.unlisten</span><span class="PUNC">(</span><span class="NAME">window</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.callbacks.handleClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>486</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>487</span> 
+<span class='line'>488</span> 
+<span class='line'>489</span> </span><span class="COMM">/**
+<span class='line'>490</span>  * Export the fully qualified class name of this component for dependency injection
+<span class='line'>491</span>  */</span><span class="WHIT">
+<span class='line'>492</span> </span><span class="NAME">goog.exportSymbol</span><span class="PUNC">(</span><span class="STRN">'gva.component.SearchForm'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">gva.component.SearchForm</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>493</span> </span></pre></body></html>

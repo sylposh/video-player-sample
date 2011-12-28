@@ -1,0 +1,75 @@
+{
+	"categories" : [{
+		"id"          : "C001",
+		"title"       : "Example Category 1",
+		"description" : "This is an example category",
+		"image_url"   : "/data/videos/thumbs/category1.png",
+		"episodes"    : [{
+			"id"          : "E001",
+			"title"       : "The Hammock",
+			"description" : "A description of example episode 001",
+			"image_url"   : "/data/videos/thumbs/hammock.png",
+			"airdate"     : "08/09/2011 10:55:50 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/hammock.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/hammock.ogv",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/hammock.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/hammock.mp4"
+				}
+		},{
+			"id"          : "E002",
+			"title"       : "Chrome Icon",
+			"description" : "Fun Chrome Icons",
+			"image_url"   : "/data/videos/thumbs/chrome-icon.png",
+			"airdate"     : "08/09/2011 10:50:49 UTC+0200",
+			"runtime"     : "10:00",
+			"video_html"  : [{
+					"path" : "/data/videos/chrome-icon.webm",
+					"type" : "webm"
+				},{
+					"path" : "/data/videos/chrome-icon.ogv",
+					"type" : "ogg"
+				},{
+					"path" : "/data/videos/chrome-icon.mp4",
+					"type" : "h264"
+				}],
+			"video_flash" : {
+					"path" : "/data/videos/chrome-icon.mp4"
+				}
+		}]
+	},{
+	"id"          : "C002",
+	"title"       : "Example Category 2",
+	"description" : "This is another example category",
+	"image_url"   : "",
+	"episodes"    : [{
+		"id"          : "E003",
+		"title"       : "Chrome, Imaginary Forces",
+		"description" : "A description of example episode 005",
+		"image_url"   : "/data/videos/thumbs/chrome-imf.png",
+		"airdate"     : "08/11/2011 8:23:44 UTC+0200",
+		"runtime"     : "10:00",
+		"video_html"  : [{
+				"path" : "/data/videos/chrome-imf.webm",
+				"type" : "webm"
+			},{
+				"path" : "/data/videos/chrome-imf.ogv",
+				"type" : "ogg"
+			},{
+				"path" : "/data/videos/chrome-imf.mp4",
+				"type" : "h264"
+			}],
+		"video_flash" : {
+				"path" : "/data/videos/chrome-imf.mp4"
+			}
+	}]
+}]
+}

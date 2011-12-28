@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+  Google Video App build file
+  
+  Compiles Javascript using the Closure compiler
+  Compresses CSS using the YUI Compressor
+  Links processed scripts and styles
+  
+  @author Justin Windle
+ 
+-->
+
+<project name="Google Video App" basedir="." default="build">
+
+  <!--
+  
+    Timestamp
+   
+  -->
+
+  <tstamp>
+      <format property="TIME" pattern="yyyy-MM-dd HH:mm:ss:S"/>
+  </tstamp>
+  
+	<!--
+	
+    Common paths
+	 
+	-->
+	
+	<property name="NAMESPACE"      value="gva" />
+	<property name="BASE_DIR"       value="../" />
+	<property name="SOURCE_DIR"     value="../source" />
+	<property name="DEPLOY_DIR"     value="../deploy" />
+	<property name="CLOSURE_DIR"    value="${SOURCE_DIR}/core/js/libs/closure-library" />
+	<property name="COMPILED_JS"    value="core/js/${NAMESPACE}.min.js" />
+	<property name="COMPRESSED_CSS" value="core/css/${NAMESPACE}.min.css" />
+	<property name="COMPILED_JS_TEMP"    value="core/js/${NAMESPACE}temp.min.js" />
+	<property name="COMPRESSED_CSS_TEMP" value="core/css/${NAMESPACE}temp.min.css" />
+	<property name="COMPRESSED_NOTIFICATION_CSS" value="core/css/${NAMESPACE}.notification.min.css" />
+	<property name="COMPRESSED_NOTIFICATION_CSS_TEMP" value="core/css/${NAMESPACE}temp.notification.min.css" />
+	<property name="COMPRESSOR_JAR" value="tools/yuicompressor-2.4.2.jar" />
+	<property name="COMPILER_JAR"   value="tools/compiler.jar" />
+  <!-- If this property is defined, the cache manifest is enabled -->
+    <property name="CACHE_MANIFEST" value="cache.manifest" />
+	<property name="JS_DOC"         value="tools/jsdoc" />
+  
+  <!--
+    
+    HTML files
+     
+  -->
+	
+	<fileset id="HTML_SRC" dir="${SOURCE_DIR}" includes="*.html" />
+	<fileset id="HTML_OUT" dir="${DEPLOY_DIR}" includes="*.html" />
+
+  <!--
+    
+    Scripts
+     
+  -->
+
+  <filelist id="RAW_SCRIPTS" dir="${SOURCE_DIR}/core/js">
+    <file name="gva/NotificationView.js" />
+  </filelist>
+	
+  <!--
+	  
+    Stylesheets
+	   
+  -->
+	
+  <filelist id="STYLESHEETS" dir="${SOURCE_DIR}/core/css">
+  	<file name="reset.css" />
+    <file name="style.css" />
+    <file name="components/grid.css" />
+    <file name="components/header.css" />
+    <file name="components/search.css" />
+    <file name="components/channel.css" />
+    <file name="components/html5player.css" />
+    <file name="components/shows.css" />
+    <file name="components/footer.css" />
+    <file name="components/subscriptions.css" />
+  </filelist>
+  
+  <filelist id="NOTIFICATION_STYLESHEETS" dir="${SOURCE_DIR}/core/css">
+  	<file name="reset.css" />
+    <file name="style.css" />
+    <file name="notification.css" />
+  </filelist>
+  
+  <!--
+    
+    Closure Builder task
+     
+  -->
+	
+	<macrodef name="closure-builder">
+		<attribute name="namespace" default="${NAMESPACE}" />
+		<attribute name="output" default="${COMPILED_JS_TEMP}" />
+		<attribute name="compilation-level" default="ADVANCED_OPTIMIZATIONS" />
+		<attribute name="input" default="${SOURCE_DIR}/core/js/@{namespace}" />
+		<sequential>
+			<echo>Compiling with Closurebuilder...</echo>
+			<exec executable="python" failonerror="true" logerror="true" output="${DEPLOY_DIR}/@{output}">
+				<arg value='${CLOSURE_DIR}/closure/bin/build/closurebuilder.py' />
+				<arg line='--root=${CLOSURE_DIR}' />
+				<arg line='--root=${SOURCE_DIR}/core/js/@{namespace}' />
+                <arg line='--output_mode=compiled' />
+				<arg line='--compiler_jar=${COMPILER_JAR}' />
+				<arg line='--compiler_flags="--compilation_level=@{compilation-level}"' />
+				<arg line='--compiler_flags="--externs=${SOURCE_DIR}/core/js/externs.js"' />
+				<arg line='--namespace=@{namespace}' />
+			</exec>
+		</sequential>
+	</macrodef>
+	
+  <!--
+    
+    YUI Compressor task
+     
+  -->
+	
+	<macrodef name="compress-css">
+		<attribute name="output" default="${COMPRESSED_CSS_TEMP}" />
+	  <sequential>
+	  	<echo>Concatenating CSS...</echo>
+	    <concat destfile="${DEPLOY_DIR}/${COMPRESSED_CSS_TEMP}" append="true">
+	    	<filelist refid="STYLESHEETS" />
+	    </concat>
+	  	<echo>Compressing CSS with YUI Compressor...</echo>
+	    <exec executable="java" failonerror="true">
+	    	<arg line="-jar ${COMPRESSOR_JAR}" />
+	    	<arg line="-o ${DEPLOY_DIR}/@{output} ${DEPLOY_DIR}/@{output}" />
+	    	<arg line="--line-break 0" />
+	    	<arg line="--type css" />
+	    	<arg line="--verbose" />
+	    </exec>
+	  </sequential>
+	</macrodef>
+	
+	
+	<macrodef name="compress-notification-css">
+		<attribute name="output" default="${COMPRESSED_NOTIFICATION_CSS_TEMP}" />
+	  <sequential>
+	  	<echo>Concatenating Notification CSS...</echo>
+	    <concat destfile="${DEPLOY_DIR}/${COMPRESSED_NOTIFICATION_CSS_TEMP}" append="true">
+	    	<filelist refid="NOTIFICATION_STYLESHEETS" />
+	    </concat>
+	  	<echo>Compressing CSS with YUI Compressor...</echo>
+	    <exec executable="java" failonerror="true">
+	    	<arg line="-jar ${COMPRESSOR_JAR}" />
+	    	<arg line="-o ${DEPLOY_DIR}/@{output} ${DEPLOY_DIR}/@{output}" />
+	    	<arg line="--line-break 0" />
+	    	<arg line="--type css" />
+	    	<arg line="--verbose" />
+	    </exec>
+	  </sequential>
+	</macrodef>
+	
+	
+	<!--
+
+      Add License to css and js output
+
+    -->
+	
+	<macrodef name="add-license-css">
+	    <sequential>
+        	<concat destfile="${DEPLOY_DIR}/${COMPRESSED_CSS}">
+                  <header>
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+                  </header>
+                  <path path="${DEPLOY_DIR}/${COMPRESSED_CSS_TEMP}"/>
+            </concat>
+            
+            <delete file="${DEPLOY_DIR}/${COMPRESSED_CSS_TEMP}"/>
+            
+            
+            <concat destfile="${DEPLOY_DIR}/${COMPRESSED_NOTIFICATION_CSS}">
+                  <header>
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+                  </header>
+                  <path path="${DEPLOY_DIR}/${COMPRESSED_NOTIFICATION_CSS_TEMP}"/>
+            </concat>
+            
+            <delete file="${DEPLOY_DIR}/${COMPRESSED_NOTIFICATION_CSS_TEMP}"/>
+            
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="add-license-js">
+	    <sequential>        
+            <concat destfile="${DEPLOY_DIR}/${COMPILED_JS}">
+                  <header>
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+                  </header>
+                  <path path="${DEPLOY_DIR}/${COMPILED_JS_TEMP}"/>
+            </concat>
+            
+            <delete file="${DEPLOY_DIR}/${COMPILED_JS_TEMP}"/>
+            
+        </sequential>
+    </macrodef>
+	
+  <!--
+    
+    Dependency calculator
+     
+  -->
+  
+  <target name="deps">
+  	<echo>Calculating dependancies...</echo>
+    <exec executable="python" failonerror="true" logError="true" output="${SOURCE_DIR}/core/js/deps.js">
+      <arg value="${CLOSURE_DIR}/closure/bin/build/depswriter.py" />
+    	<arg line='--root_with_prefix="${SOURCE_DIR}/core/js/gva/ /../../../../../gva/"' />
+    </exec>
+  </target>
+	
+	<!--
+	<target name="deps">
+    <echo>Calculating dependancies...</echo>
+    <exec executable="python" failonerror="true" logerror="true" output="${SOURCE_DIR}/core/js/deps.js">
+      <arg value='${CLOSURE_DIR}/closure/bin/build/closurebuilder.py' />
+      <arg line='\-\-root=${CLOSURE_DIR}' />
+      <arg line='\-\-root=${SOURCE_DIR}/core/js/gva' />
+      <arg line='\-\-output_mode=script' />
+      <arg line='\-\-compiler_jar=${COMPILER_JAR}' />
+      <arg line='\-\-compiler_flags="\-\-externs=${SOURCE_DIR}/core/js/externs.js"' />
+      <arg line='\-\-namespace="gva.bootstrap"' />
+    </exec>
+  </target>
+  -->
+	
+	<!--
+    
+    Documentation
+    TODO: Compile unminified version and document
+     
+  -->
+	
+  <target name="docs">
+  	<echo>Generating documentation...</echo>
+    <delete dir="${BASE_DIR}/docs/jsdocs"/>
+    <mkdir dir="${BASE_DIR}/docs/jsdocs"/>
+    <exec executable="java" failonerror="true">
+      <arg line="-jar ${JS_DOC}/jsrun.jar ${JS_DOC}/app/run.js" />
+      <arg line="-t=${JS_DOC}/templates/jsdoc" />
+      <arg line="-d=${BASE_DIR}/docs/jsdocs" />
+      <arg line="${SOURCE_DIR}/core/js/${NAMESPACE}/" />
+      <arg line="-a" />
+    	<arg line="-r" />
+    </exec>
+  </target>
+	
+  <!--
+	  
+    Prepare deploy directory
+	   
+  -->
+	
+	<target name="prep" description="Prepares the deploy directory">
+		<echo>Preparing deploy directory...</echo>
+		<delete dir="${DEPLOY_DIR}" />
+		<mkdir dir="${DEPLOY_DIR}/core/css" />
+		<mkdir dir="${DEPLOY_DIR}/core/js" />
+	</target>
+	
+  <!--
+    
+    Copy files to deploy directory
+     
+  -->
+	
+	<target name="copy" description="Copies files to the deploy directory">
+        <echo>Copying dependencies...</echo>
+        <copy todir="${DEPLOY_DIR}" verbose="true">
+            <fileset dir="${SOURCE_DIR}" includes="themes/**" />
+            <fileset dir="${SOURCE_DIR}" includes="core/js/libs/*" />
+            <fileset dir="${SOURCE_DIR}" includes=".htaccess,cache.manifest,favicon.ico,humans.txt,robots.txt" />
+        </copy>
+        <echo>Copying HTML...</echo>
+        <copy todir="${DEPLOY_DIR}" verbose="true">
+            <fileset refid="HTML_SRC" />
+        </copy>
+        <echo>Copying Uncompiled Scripts...</echo>
+        <copy todir="${DEPLOY_DIR}/core/js" verbose="true">
+            <filelist refid="RAW_SCRIPTS" />
+        </copy>
+        <echo>Copying Images...</echo>
+        <copy todir="${DEPLOY_DIR}" verbose="true">
+            <fileset dir="${SOURCE_DIR}" includes="core/img/**" />
+        </copy>
+        <echo>Copying SWFs...</echo>
+        <copy todir="${DEPLOY_DIR}" verbose="true">
+            <fileset dir="${SOURCE_DIR}" includes="core/swf/**" />
+        </copy>
+        <echo>Copying Data...</echo>
+        <copy todir="${DEPLOY_DIR}" verbose="true">
+            <fileset dir="${SOURCE_DIR}" includes="data/**" />
+        </copy>
+	</target>
+
+  <!--
+    
+    Link compiled scripts & styles
+     
+  -->
+	
+	<target name="link" description="Links processed scripts / styles to documents">
+    <echo>Linking compiled scripts...</echo>
+    <replaceregexp match="\&lt;!\-\- SCRIPTS.*END SCRIPTS \-\-\&gt;" replace='\&lt;script src="/${COMPILED_JS}"&gt;\&lt;/script&gt;' flags="s">
+      <fileset refid="HTML_OUT" />
+    </replaceregexp>
+    <echo>Linking compressed styles...</echo>
+    <replaceregexp match="\&lt;!\-\- STYLES.*END STYLES \-\-\&gt;" replace='&lt;link rel="stylesheet" href="/${COMPRESSED_CSS}"&gt;' flags="s">
+      <fileset refid="HTML_OUT" />
+    </replaceregexp>
+    <echo>Linking compressed notification styles...</echo>
+    <replaceregexp match="\&lt;!\-\- NOTIFICATION STYLES.*END NOTIFICATION STYLES \-\-\&gt;" replace='&lt;link rel="stylesheet" href="/${COMPRESSED_NOTIFICATION_CSS}"&gt;' flags="s">
+      <fileset refid="HTML_OUT" />
+    </replaceregexp>
+	</target>
+
+  <!--
+    
+    Enables cache manifest
+     
+  -->
+
+  <target name="manifest" if="CACHE_MANIFEST">
+    <echo>Copying manifest...</echo>
+    <copy todir="${DEPLOY_DIR}" verbose="true">
+        <fileset dir="${SOURCE_DIR}" includes="cache.manifest" />
+    </copy>
+    <echo>Adding cache manifest to HTML files...</echo>
+    <replaceregexp match="&lt;html&gt;" replace='&lt;html manifest\="/${CACHE_MANIFEST}"&gt;' flags="s">
+      <fileset refid="HTML_OUT" />
+    </replaceregexp>
+    <echo>Adding timestamp to cache manifest...</echo>
+    <replaceregexp match="timestamp" replace='${TIME}' flags="">
+      <fileset dir="${DEPLOY_DIR}">
+        <include name="${CACHE_MANIFEST}"/>
+      </fileset>
+    </replaceregexp>
+  </target>
+	
+	<!--
+	    
+    Full project build
+	     
+    -->
+  
+	<target name="build" description="Processes JavaScript and CSS" depends="prep, copy, link, manifest">
+		<echo>Compiling JavaScript...</echo>
+		<closure-builder output="${COMPILED_JS_TEMP}" />
+		<compress-css output="${COMPRESSED_CSS_TEMP}" />
+		<compress-notification-css output="${COMPRESSED_NOTIFICATION_CSS_TEMP}" />
+		<add-license-css />
+		<add-license-js />
+	</target>
+	
+</project>

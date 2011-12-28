@@ -1,0 +1,19 @@
+{
+  "name": "Google OS TV Project",
+  "version": "1",
+
+  "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+	"icons": { "128": "path/to/your/128By128/appIcon.png" },
+	
+	"background_page": "https://path/on/https/only/to/your/background.html",
+	
+	"permissions": [
+	  "background",
+	  "notifications",
+	  "unlimitedStorage"
+	],
+  "app": {
+    "urls": [ "*://yourhostname" ],
+    "launch": { "web_url": "http://yourhostname" } 
+  }
+}

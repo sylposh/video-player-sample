@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Video Player Web App</title>
+	<link href="libs/bootstrap.min.css" rel="stylesheet">
+  <link href="libs/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="libs/prettify.js"></script>
+  <script type="text/javascript" src="libs/lang-yaml.js"></script>
+	<script type="text/javascript" src="libs/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="libs/bootstrap-scrollspy.js"></script>
+	<style type="text/css">
+	
+    section {
+      padding-top: 60px;
+    }
+    
+    section > .row {
+      margin-bottom: 10px;
+    }
+    
+    .footer {
+      background-color: #eee;
+      min-width: 940px;
+      padding: 30px 0;
+      text-shadow: 0 1px 0 #fff;
+      border-top: 1px solid #e5e5e5;
+      -webkit-box-shadow: inset 0 5px 15px rgba(0,0,0,.025);
+         -moz-box-shadow: inset 0 5px 15px rgba(0,0,0,.025);
+    }
+    
+    .footer p {
+      color: #555;
+    }
+    
+    /* Jumbotrons
+    -------------------------------------------------- */
+    .jumbotron {
+      min-width: 940px;
+      padding-top: 40px;
+    }
+    .jumbotron .inner {
+      
+      padding: 45px 0;
+      -webkit-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
+         -moz-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
+    /*          box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
+    */}
+    .jumbotron h1,
+    .jumbotron p {
+      margin-bottom: 9px;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    }
+    .jumbotron h1 {
+      font-size: 54px;
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,.5);
+    }
+    .jumbotron p {
+      font-weight: 300;
+    }
+    .jumbotron .lead {
+      font-size: 20px;
+      line-height: 27px;
+    }
+    .jumbotron p a {
+      color: #fff;
+      font-weight: bold;
+    }
+    .masthead {
+      background-color: #049cd9;
+      background-repeat: no-repeat;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#000), to(#FFF));
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#000), to(#FFF));
+      background-image: -webkit-linear-gradient(#000, #FFF);*/
+      background-image: -webkit-linear-gradient(#000, #FFF);
+      background-image: -moz-linear-gradient(#000, #FFF);
+      background-image: -o-linear-gradient(top, #000, #FFF);
+      background-image: -khtml-gradient(linear, left top, left bottom, from(#000), to(#FFF));
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#FFFFFF', GradientType=0); /* IE8 and down */
+    }
+  </style>
+</head>
+<body onload="prettyPrint()">
+
+  <div class="topbar" data-scrollspy="scrollspy">
+    <div class="topbar-inner">
+      <div class="container">
+        <ul class="nav">
+          <li class="active"><a href="#overview">Overview</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#architectural">Architectural Overview</a></li>
+          <li><a href="#data-structure">Data Structure</a></li>
+          <li><a href="#video-formats">Supported Video Formats</a></li>
+          <li><a href="#setup">Setup</a></li>
+          <li><a href="#customization">Customization</a></li>
+          <li><a href="JSDocs/index.html">API Library</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <header class="jumbotron masthead" id="overview">
+    <div class="inner">
+      <div class="container">
+        <h1>Chrome Video Player Web App</h1>
+        <div class="row">
+          <div class="span-one-third">
+            <img src="screenshots/player-full.png" width="280px">
+          </div>
+          <div class="span-one-third">
+            <img src="screenshots/player-shows.png" width="280px">
+          </div>
+          <div class="span-one-third">
+            <img src="screenshots/player-episodes.png" width="280px">
+          </div>
+        </div>
+      </div><!-- /container -->
+    </div>
+  </header>
+
+  <div class="container">
+    <section id="about">
+      <div class="page-header">
+        <h1>About</h1>
+      </div>
+      <div class="row">
+        <div class="span-one-third">
+          <h3>A Video Player Web App</h3>
+          <p>The Chrome Video Player Web App is an open web platform video player built using the same architecture as the <a href="https://chrome.google.com/webstore/detail/imjhdahelgojehmfmkmdfjcpfbglbfmj">60 Minutes</a> and <a href="https://chrome.google.com/webstore/detail/pbalkogcfbpplioohgihkidalmomblfc">RedBull.tv</a> apps in the Chrome Web Store.  It can be customized, extended, or just used out of the box and populated with your own content.</p>   
+        </div>
+        <div class="span-one-third">
+          <h3>Chrome Web Store</h3>
+          <p>While the app was designed to run in all modern browsers, it really shines when setup as an app that is installed through the Chrome Web Store.</p>
+          <img src="libs/cws.png" style="margin-left:auto;margin-right:auto;width:92px;display:block;">
+        </div>
+        <div class="span-one-third">
+          <h3>Browser Support</h3>
+          <p>In addition to working as an app that can be installed through the Chrome Web Store, the Video Player Web App has been tested in:</p>
+          <ul>
+            <li>Latest Safari</li>
+            <li>Latest Google Chrome</li>
+            <li>Firefox 4+</li>
+            <li>Internet Explorer 7+</li>
+            <li>Opera 11</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span16">
+          <p>This document is intended to provide a brief overview of the applications structure and capabilities, as well as information explaining how to populate, configure, and customize it to fit your needs.</p>
+          <h3>See it in action</h3>
+          You can see the video player in action <a href="http://vidplayerdemo.appspot.com/">here</a>, or by installing it through the <a href="">Chrome Web Store</a>
+        </div>
+      </div>
+    </section>
+  
+    <section id="architectural">
+      <div class="page-header">
+        <h1>Architectural Overview</h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          &nbsp;
+        </div>
+        <div class="span12">     
+          <p>The following architectural overview covers the main structure of the application code and may be of interest to developers looking to study or extend the application’s functionality. If you’re keen to get started and simply wish to populate it with your own data and customize the appearance, please refer to the subsequent sections in this document.</p>
+          <p>The Google Video Application is built using the open source <a href="http://code.google.com/closure/">Google Closure</a> JavaScript library and is compiled with the <a href="http://code.google.com/closure/compiler/">Closure Compiler</a>. If you are not familiar with these tools, we recommend that you read the introductions and tutorials on their respective pages, in order to gain an understanding of the tools that underpin the application.</p>
+          <p>The structure of the application broadly follows the <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC (Model View Controller)</a> pattern, meaning that the data populating the application lives within the model, visual aspects and user interactions are handled by the components in the view, and controllers are used to tell these components how to behave as well as usher data between them.</p>
+          <p>As mentioned above, the application consists of a series of interactive components, as well as controllers which govern sections of the application and the components nested within them. The controllers and components are embedded in <code>index.html</code> using <a href="http://html5doctor.com/html5-custom-data-attributes/">data attributes</a>. The attributes are recognized by the <code>ControllerInitializer</code> and <code>ComponentInitializer</codE>, which then search for controller / component definitions matching the attribute values, before initialising them.</p>
+          <p>Each component has a context, being the block of HTML nested within the element specifying the component definition in it’s data attribute. The context is passed automatically to the component by the <code>ComponentInitializer</code> via the <code>initialize</code> method and allows the component to operate in the correct sandbox, controlling only the content and user interactions it is concerned with. Components can also expose APIs to allow controllers to govern how they behave and pass data from the models to them.</p>
+          <p>This process is initiated by the <code>ApplicationController</code>, which performs several tasks as the application starts. These tasks include, in this order:
+          <ul>
+            <li>Loading the configuration JSON file</li>
+            <li>Loading category and episode data from the location specified in the config file</li>
+            <li>Registering components via the <code>ComponentInitializer</code></li>
+            <li>Registering controllers via the <code>ControllerInitializer</code></li>
+            <li>Enabling deep linking and navigation via the History object</li>
+          </ul>
+          <p>As the user navigates the application, tokens are passed to the History object, which stores the paths used to represent sections and subsections within the application. These changes are intercepted and handled by the <code>ApplicationController</code> which then searches all registered controllers for one matching the first segment of the new path. This is referred to internally as the <code>slug</code> and is specified in another data attribute in the HTML.</p>
+          <p>Once a section controller with the appropriate slug is found, any active controllers are disabled and the target controller enabled, thus handing control to the appropriate part of the application. If there are any addition segments in the path, these are then passed to the active controller, which will then in turn handle any sub tasks related to that data. For example, navigating to the following path <code>/shows/example-category-1/</code> will activate the shows controller and tell it to do something with the <code>example-category-1</code> segment. In this case, it would display a grid of all episodes belonging to that category.</p>
+          <p>For more detailed information concerning specific sections of the applications code, please refer to the <a href="JSDocs/index.html">code documentation</a>.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="data-structure">
+      <div class="page-header">
+        <h1>Data Structure</h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          &nbsp;
+        </div>
+        <div class="span12">
+          <p>The Google Video Application is configured and populated by two JSON (JavaScript Object Notation) files, <code>config.json</code> and <code>data.json</code> respectively; both of which are located in the data directory. The following structural outline explains which aspects of the application can be controlled by these files.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>config.json</h2>
+        </div>
+        <div class="span12">
+          <h3>Application Configuration</h3>
+<pre class="prettyprint">{
+  "config" : {
+    "base_url" : "http://yourhostnamehere/",
+    "jsonp" : "false",
+    "data_path" : "/data/data.json",
+    "flash_theme" : {
+      "backgroundColour" : "000000",
+      "guiControlsColour" : "f2f2f2",
+      "guiControlsGradientEndColour" : "d7d7d7",
+      "guiControlsShadowAlpha" : 0.2,
+      "guiTrackBackColour" : "fafafa",
+      "guiTrackFillColour" : "feb600",
+      "guiTrackShadowAlpha" : 0.2,
+      "guiDurationTextColour" : "222222",
+      "guiTimeTextColour" : "777777"
+    }
+  }
+}
+</pre>
+          <ul>
+            <li><code>base_url:</code> The base url of the application</li>
+            <li><code>jsonp:</code> If data is being loaded from a different domain to the application, set this to true</li>
+            <li><code>data_path:</code> The path to the data which populates the application</li>
+            <li><code>flash_theme:</code> Used to configure visual aspects of the Flash fallback video player</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>data.json</h2>
+        </div>
+        <div class="span12">
+          <h3>Categories</h3>
+          <p>Categories are a collection of episodes, for example a specific show.</p>
+<pre class="prettyprint">{
+  "categories" : [{
+    "id"          : "C001",
+    "title"       : "Example Category 1",
+    "description" : "This is an example category",
+    "image_url"   : "/data/videos/thumbs/category1.png",
+    "episodes"    : []
+  }]
+}
+</pre>
+          <ul>
+            <li><code>id:</code> A unique id for the category</li>
+            <li><code>title:</code> The category title</li>
+            <li><code>description:</code> A short text description of the category</li>
+            <li><code>image_url:</code> The path to the category thumbnail</li>
+            <li><code>episodes:</code> A list of episodes belonging to the category</li>
+          </ul>
+          <h3>Episodes</h3>
+          <p>Each category contains a list of episodes, which in turn contain the following attributes:</p>
+<pre class="prettyprint">{
+  "id"          : "E001",
+  "title"       : "The Hammock",
+  "description" : "A description of example episode 001",
+  "image_url"   : "/data/videos/thumbs/hammock.png",
+  "airdate"     : "08/09/2011 10:55:50 UTC+0200",
+  "runtime"     : "10:00",
+  "video_html"  : [{
+      "path" : "/data/videos/hammock.webm",
+      "type" : "webm"
+    },{
+      "path" : "/data/videos/hammock.ogv",
+      "type" : "ogg"
+    },{
+      "path" : "/data/videos/hammock.mp4",
+      "type" : "h264"
+    }],
+  "video_flash" : { "path" : "/data/videos/hammock.mp4" }
+}
+</pre>
+          <ul>
+            <li><code>id:</code> A unique id for the episode</li>
+            <li><code>title:</code> The episode title</li>
+            <li><code>description:</code> A short text description of the episode</li>
+            <li><code>image_url:</code> The path to the episode thumbnail</li>
+            <li><code>airdate:</code> The air date of the episode, in a format recognized by the JavaScript Date.parse() method</li>
+            <li><code>runtime:</code> The duration of the episode in the format HH:MM</li>
+            <li><code>video_html:</code> A list of available HTML5 video formats, each specifying a path and a type</li>
+            <li><code>video_flash:</code> The path to a video playable by the fallback Flash video player</li>
+          </ul>
+          <p>The Google Video Application comes with several example categories and videos. Please study the existing JSON files for further clarification on how to use them.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="video-formats">
+      <div class="page-header">
+        <h1>Supported Video Formats</h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          &nbsp;
+        </div>
+        <div class="span12">
+          <p>The various HTML5 video capable browsers each support different sets of video formats. It is therefore recommended that you provide videos in several formats, in order to support the highest possible amount of browsers and devices.</p>
+          <p>The Google Video Application supports the following video formats:</p>
+          <ul>
+            <li><strong>MP4:</strong> H.254 video with AAC audio</li>
+            <li><strong>OGG/OGV:</strong> Theora video with Vorbis audio</li>
+            <li><strong>WEBM:</strong> VP8 video with Vorbis audio</li>
+          </ul>
+          <p>You need only provide paths to videos in these formats, the application will determine which type is supported by the user’s browser and whether or not the Flash fallback is required.</p>
+          <p>There are many tools available for converting your videos to these formats, for example <a href="http://www.mirovideoconverter.com/">MiroVideoConverter</a> or <a href="http://handbrake.fr">Handbrake</a>.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="setup">
+      <div class="page-header">
+        <h1>Setup</h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Server Setup</h2>
+        </div>
+        <div class="span12">
+          <p>The Google Video Application should work well on most server configurations out of the box. However, if you experience problems playing certain video types, you may want to check whether your server is using the correct mime-types. The <code>.htaccess</code> file that comes with the application already defines these mime-types for use with APACHE servers, so in most cases you will not need to worry about setting this up.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Hosting on AppEngine
+        </div>
+        <div class="span12">
+          <p>To host this project on <a href="https://appengine.google.com">Google's AppEngine</a>, simply create a new AppEngine project that contains the deploy directory and the <code>app.yaml</code> file below.</p>
+<pre class="prettyprint">application: MyVideoApp
+version: Version1
+runtime: python
+api_version: 1
+
+default_expiration: "30d"
+
+handlers:
+
+- url: /(.*\.(appcache|manifest))
+  static_files: deploy/\1
+  mime_type: text/cache-manifest
+  upload: deploy/(.*\.(appcache|manifest))
+  expiration: "0s"
+
+- url: /core
+  static_dir: deploy/core
+
+- url: /data
+  static_dir: deploy/data
+  expiration: "0s"
+  
+- url: /themes
+  static_dir: deploy/themes
+    
+- url: /(.*\.(html|txt|xml|png|ico))
+  static_files: deploy/\1
+  upload: deploy/(.*\.(html|txt|xml|png|ico))
+  
+- url: /
+  static_files: deploy/index.html
+  upload: deploy/index.html</pre>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Chrome Web Store</h2>
+        </div>
+        <div class="span12">
+          <p>The Google Video Application was designed to provide additional features when installed through the Chrome 
+          Web Store.  For example, it can take advantage of <a href="http://code.google.com/chrome/extensions/background_pages.html">background pages</a>, allowing a script to periodically check whether new videos are available and notify the user via an HTML5 notification. This feature requires that the background.html page (and all linked resources) are hosted on a server which supports HTTPS (Hypertext Transfer Protocol Secure) connections. If you’re unsure whether your host supports HTTPS connections or how you can enable this feature, please contact your hosting administrator.</p>
+          <p>To learn more about publishing your app in the Chrome Web Store, check out the <a href="http://code.google.com/chrome/webstore/docs/">documentation</a>, or follow the steps in this <a href="http://code.google.com/chrome/webstore/docs/get_started_simple.html">tutorial</a>.</p>
+          <p>For an even easier experience, try <a href="http://appmator.appspot.com">AppMator</a>, which will create all the necessary files for you in about 30 seconds!</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h3>manifest.json</h3>
+        </div>
+        <div class="span12">
+          <p>A sample Chrome Web Store manifest file has been included below for your reference</p>
+<pre class="prettyprint">
+{
+  "name": "Google OS TV Project",
+  "version": "1",
+
+  "description": "Lorem ipsum dolor sit amet.",
+  "icons": { "128": "path/to/your/128By128/appIcon.png" },
+  
+  "background_page": "https://path/on/https/only/to/your/background.html",
+  
+  "permissions": [
+    "background",
+    "notifications",
+    "unlimitedStorage"
+  ],
+  "app": {
+    "urls": [ "*://yourhostname" ],
+    "launch": { "web_url": "http://yourhostname" } 
+  }
+}
+</pre>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Sample Videos</h2>
+        </div>
+        <div class="span12">
+          <p>We've shipped three sample videos (in multiple formats) that you can use to try out this web application.  Simply copy the files from <code>/docs/samples/</code> to <code>/deploy/data/</code></p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="customization">
+      <div class="page-header">
+        <h1>Customization</h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          &nbsp;
+        </div>
+        <div class="span12">
+          <p>The core styles of the Google Video Application can be found within the css directory and control the layout and more generic aspects of the applications appearance. In most cases, you will probably not want to edit these styles and instead focus on customising the applications theme.</p>
+          <p>All files relating to this aspect of customisation can be found within the themes directory. Here you can change the colours of the application in <code>styles.css</code> and also find the sprites used throughout the application.</p>
+          <p>With a basic understanding of CSS, you can easily change the application colours. In order to edit the sprites, open the PSD file <code>(sprites.psd)</code> in the assets directory. Be sure to maintain the sprites position and boundaries and once you’re finished, hide the background layer and save the sprites over the existing <code>sprites.png</code> in the themes/os/img directory.</p>
+          <p>If you wish to develop multiple themes, you can create a duplicate of the os directory and rename it to reflect your project. You can then enable your theme by changing the stylesheet path in the head of index.html. Also be sure to change the path to your sprite sheet in your themes styles.css file.</p>
+          
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="pull-right"><a href="#">Back to top</a></p>
+      <p style="vertical-align:bottom;">
+        <img src="screenshots/panda.png">
+        &copy; 2011, Google Inc.<br>
+        Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. 
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

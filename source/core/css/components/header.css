@@ -1,0 +1,193 @@
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/**
+ * Header
+ * ======================================================== */
+
+body > header h1 a,
+.screen .header h1 a {
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  text-indent: -9999px;
+  position: absolute;
+  display: block;
+  height: 25px;
+  width: 75px;
+  left: 30px;
+  top: 13px;
+}
+
+
+
+
+/**
+ * Sharing on home page.
+ * ======================================================== */
+
+
+#video-player:hover .sharing {
+  opacity: 1;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  transition: opacity 150ms ease-out 0s;
+  -moz-transition: opacity 150ms ease-out 0s;
+  -webkit-transition: opacity 150ms ease-out 0s;
+}
+
+#video-player .sharing {
+  width: 68px;
+  height: 31px;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 3;
+  font-size: 13px;
+  line-height: 31px;
+  text-align: center;
+  overflow: hidden;
+  opacity: 0;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  transition: opacity 150ms ease-out 2s;
+  -moz-transition: opacity 150ms ease-out 2s;
+  -webkit-transition: opacity 150ms ease-out 2s;
+}
+
+#video-player .sharing.active {
+  opacity: 1;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  width: 495px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.23);
+  -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.23);
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.23);
+}
+
+#video-player .sharing a {
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  float: left;
+}
+
+#video-player .sharing nav {
+  position: absolute;
+  right: 75px;
+  top: 0;
+  opacity: 0;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  
+  -webkit-transition: opacity 150ms ease-out 0s;
+  -moz-transition: opacity 150ms ease-out 0s;
+  transition: opacity 150ms ease-out 0s;
+}
+
+#video-player .sharing.active nav {
+  opacity: 1;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+
+#video-player .sharing nav a {
+  border-right: 1px solid;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+#video-player .sharing a.menu {
+  width: 67px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+#video-player .sharing .menu .icon {
+  background-position: -280px -80px;
+  width: 13px;
+  height: 13px;
+  position: relative;
+  top: 2px;
+  margin-right: 7px;
+}
+
+#video-player .sharing.active a.menu {
+  width: 75px;
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -webkit-border-top-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  -moz-border-radius-topright: 2px;
+  -moz-border-radius-bottomright: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+#video-player .sharing.active .menu .icon {
+  background-position: -280px -100px;
+}
+
+#video-player .sharing.active nav .twitter {
+  width: 127px;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-bottomleft: 2px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+#video-player .sharing.active nav .facebook {
+  width: 145px;
+}
+
+#video-player .sharing.active nav .google {
+  width: 144px;
+  cursor: default;
+}
+
+#video-player .sharing.active nav .icon {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	margin-right: 7px;
+	position: relative;
+	display: inline-block;
+	height: 13px;
+	width: 7px;
+}
+
+#video-player .sharing.active nav .twitter .icon {
+	background-position: -425px 0px;
+	top: 4px;
+}
+
+#video-player .sharing.active nav .facebook .icon {
+  background-position: -425px -25px;
+  top: 2px;
+}
+
+#video-player .sharing.active nav .google div {
+  position: relative;
+  top: 4px;
+  margin-right: 7px !important;
+}
+
+#video-player .sharing.active nav .google .icon {
+  background-position: -425px -50px;
+}

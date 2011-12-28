@@ -1,0 +1,475 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span> Copyright 2011 Google
+<span class='line'>  3</span> 
+<span class='line'>  4</span> Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'>  5</span> you may not use this file except in compliance with the License.
+<span class='line'>  6</span> You may obtain a copy of the License at
+<span class='line'>  7</span> 
+<span class='line'>  8</span>     http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'>  9</span> 
+<span class='line'> 10</span> Unless required by applicable law or agreed to in writing, software
+<span class='line'> 11</span> distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 12</span> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 13</span> See the License for the specific language governing permissions and
+<span class='line'> 14</span> limitations under the License.
+<span class='line'> 15</span> */</span><span class="WHIT">
+<span class='line'> 16</span> 
+<span class='line'> 17</span> </span><span class="COMM">// Define custom DragDropGroup</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="NAME">goog.provide</span><span class="PUNC">(</span><span class="STRN">'gva.ShowDragDropGroup'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="COMM">/**
+<span class='line'> 20</span>  * Provide a namespace for this class
+<span class='line'> 21</span>  */</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="NAME">goog.provide</span><span class="PUNC">(</span><span class="STRN">'gva.component.ShowGrid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 23</span> 
+<span class='line'> 24</span> </span><span class="COMM">/**
+<span class='line'> 25</span>  * Import dependencies
+<span class='line'> 26</span>  */</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.async.Delay'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom.dataset'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.events'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.fx'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.fx.AbstractDragDrop'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.fx.DragDrop'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.fx.DragDropGroup'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.math.Coordinate'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.math.Rect'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.style'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.component.BaseComponent'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.component.FlexibleGrid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.model.DataModel'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.model.UserModel'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.util.DateUtil'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.vo.Show'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> 
+<span class='line'> 45</span> 
+<span class='line'> 46</span> 
+<span class='line'> 47</span> </span><span class="COMM">/**
+<span class='line'> 48</span>  * Custom DragDropGroup implementation to override drag positioning.
+<span class='line'> 49</span>  * @constructor
+<span class='line'> 50</span>  * @extends {goog.fx.DragDropGroup}
+<span class='line'> 51</span>  */</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="NAME">gva.ShowDragDropGroup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">  </span><span class="NAME">goog.fx.DragDropGroup.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="NAME">goog.inherits</span><span class="PUNC">(</span><span class="NAME">gva.ShowDragDropGroup</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.DragDropGroup</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> 
+<span class='line'> 57</span> 
+<span class='line'> 58</span> </span><span class="COMM">/**
+<span class='line'> 59</span> * (Overrides goog.fx.DragDropGroup.getDragElementPosition)
+<span class='line'> 60</span> * Returns the position for the drag element.
+<span class='line'> 61</span> *
+<span class='line'> 62</span> * @param {Element} sourceEl Drag source element.
+<span class='line'> 63</span> * @param {Element} el The dragged element created by createDragElement().
+<span class='line'> 64</span> * @param {goog.events.BrowserEvent} event Mouse down event for start of drag.
+<span class='line'> 65</span> * @return {goog.math.Coordinate} The position for the drag element.
+<span class='line'> 66</span> */</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="NAME">gva.ShowDragDropGroup.prototype.getDragElementPosition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">sourceEl</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">el</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.math.Coordinate</span><span class="PUNC">(</span><span class="NAME">event.clientX</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event.clientY</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NUMB">150</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> 
+<span class='line'> 71</span> </span><span class="COMM">/**
+<span class='line'> 72</span>  * @constructor
+<span class='line'> 73</span>  * @extends {gva.component.BaseComponent}
+<span class='line'> 74</span>  */</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="NAME">gva.component.ShowGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 76</span> 
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 78</span>      * The flexible grid for arranging items.
+<span class='line'> 79</span>      * @type {gva.component.FlexibleGrid}
+<span class='line'> 80</span>      */</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">    </span><span class="NAME">this._grid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">gva.component.FlexibleGrid</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> 
+<span class='line'> 83</span> </span><span class="WHIT">    </span><span class="COMM">// The model instances.</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">    </span><span class="NAME">this._userModel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">    </span><span class="NAME">this._dataModel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> 
+<span class='line'> 87</span> </span><span class="WHIT">    </span><span class="COMM">// The subscriptions component instance.</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">    </span><span class="NAME">this._subscriptions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> 
+<span class='line'> 90</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 91</span>      * The object containing all draggable shows.
+<span class='line'> 92</span>      * @type {goog.fx.DragDropGroup}
+<span class='line'> 93</span>      */</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">    </span><span class="NAME">this._draggableShows</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> 
+<span class='line'> 96</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 97</span>      * The drop area for draggable shows.
+<span class='line'> 98</span>      * @type {goog.fx.DragDrop}
+<span class='line'> 99</span>      */</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">    </span><span class="NAME">this._dropArea</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> 
+<span class='line'>102</span> </span><span class="WHIT">    </span><span class="COMM">// Boolean for whether or not a show is being dragged.</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">    </span><span class="NAME">this.dragging</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> 
+<span class='line'>105</span> </span><span class="WHIT">    </span><span class="COMM">// Timeouts for changing back to default text and closing the 'show added' text.</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">    </span><span class="NAME">this.confirmationTextTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">    </span><span class="NAME">this.confirmationCloseTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>108</span> 
+<span class='line'>109</span> </span><span class="WHIT">    </span><span class="COMM">// Timeout for removing the up state of the subscriptions panel</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">    </span><span class="NAME">this.closeSubscriptionsTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> 
+<span class='line'>112</span> </span><span class="WHIT">    </span><span class="COMM">// Duration (ms) of show added confirmation.</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">    </span><span class="NAME">this.CONFIRMATION_DURATION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2000</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>114</span> 
+<span class='line'>115</span> </span><span class="WHIT">    </span><span class="COMM">// Default text for the droppable area.</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">    </span><span class="NAME">this.DROP_INSTRUCTIONS</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'Drop Shows here to subscribe'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> 
+<span class='line'>118</span> </span><span class="WHIT">    </span><span class="COMM">// Whether or not a successful drop has occurred recently.</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">    </span><span class="COMM">// Should be set to false by dragend event immediately after drop event.</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">    </span><span class="NAME">this.recentlyDropped</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> 
+<span class='line'>122</span> </span><span class="WHIT">    </span><span class="COMM">// Call super constructor</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">    </span><span class="NAME">gva.component.BaseComponent.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>125</span> 
+<span class='line'>126</span> </span><span class="COMM">/**
+<span class='line'>127</span>  * Extend gva.component.BaseComponent
+<span class='line'>128</span>  */</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="NAME">goog.inherits</span><span class="PUNC">(</span><span class="NAME">gva.component.ShowGrid</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">gva.component.BaseComponent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> 
+<span class='line'>131</span> </span><span class="COMM">/**
+<span class='line'>132</span>  * @inheritDoc
+<span class='line'>133</span>  */</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="NAME">gva.component.ShowGrid.prototype.initialize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$context</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>135</span> 
+<span class='line'>136</span> </span><span class="WHIT">    </span><span class="COMM">// Call super method.</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">    </span><span class="NAME">this.constructor.superClass_.initialize.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$context</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>138</span> 
+<span class='line'>139</span> </span><span class="WHIT">    </span><span class="COMM">// Get instances.</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">    </span><span class="NAME">this._userModel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.model.UserModel.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">    </span><span class="NAME">this._dataModel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.model.DataModel.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> 
+<span class='line'>143</span> </span><span class="WHIT">    </span><span class="COMM">// Set up the fixed grid cell size.</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">    </span><span class="NAME">this._grid.initialize</span><span class="PUNC">(</span><span class="NAME">$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">380</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">30</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">30</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> 
+<span class='line'>147</span> 
+<span class='line'>148</span> </span><span class="COMM">/**
+<span class='line'>149</span>  * Creates a DOM element for an item and appends it to the grid
+<span class='line'>150</span>  * @param {gva.vo.Show} item The data for the item to add.
+<span class='line'>151</span>  */</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="NAME">gva.component.ShowGrid.prototype.addItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>153</span> 
+<span class='line'>154</span> </span><span class="WHIT">    </span><span class="COMM">// Format the date</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">date</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Date</span><span class="PUNC">(</span><span class="NAME">item.latestvideodate</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">dateStr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.util.DateUtil.formatDate</span><span class="PUNC">(</span><span class="NAME">date</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'M j, Y'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>157</span> 
+<span class='line'>158</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subscribeClass</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">item.subscribed</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'subscribed'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subscribeCopy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">item.subscribed</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'Remove'</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'Subscribe'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> 
+<span class='line'>161</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">episodesLink</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'/shows/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.slug</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> 
+<span class='line'>163</span> </span><span class="WHIT">    </span><span class="COMM">// Create markup for the grid item</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">itemMarkup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">    </span><span class="STRN">'&lt;article class="show" data-showid="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'">'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;figure>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;img src="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.image_url</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'"/>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;/figure>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;header>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;h3>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/h3>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;/header>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;p>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.description</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/p>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;footer>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;span class="icon">&lt;/span>&lt;p>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.videocount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">' Videos, Updated: '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">dateStr</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/p>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;/footer>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;nav>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;a class="subscribe '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">subscribeClass</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'" href="#" data-showid="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'">'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">                </span><span class="STRN">'&lt;strong>&lt;span class="icon">&lt;/span>&lt;em>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">subscribeCopy</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'&lt;/em>&lt;/strong>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;/a>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">            </span><span class="STRN">'&lt;a class="episodes" title="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item.title</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'" href="'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">episodesLink</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'">&lt;strong>&lt;span class="icon">&lt;/span>&lt;em>Episodes&lt;/em>&lt;/strong>&lt;/a>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">        </span><span class="STRN">'&lt;/nav>'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">    </span><span class="STRN">'&lt;/article>'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> 
+<span class='line'>184</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>185</span> 
+<span class='line'>186</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">goog.userAgent.IE</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">goog.userAgent.VERSION</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NUMB">9</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">      </span><span class="COMM">// Create show element for older browsers.</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">      </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">innerShiv</span><span class="PUNC">(</span><span class="NAME">itemMarkup</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">      </span><span class="COMM">// Create a DOM element from the markup fragment</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">      </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.htmlToDocumentFragment</span><span class="PUNC">(</span><span class="NAME">itemMarkup</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>194</span> 
+<span class='line'>195</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$subscribeBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.subscribe'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$episodesBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.episodes'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> 
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="COMM">// Bind event handlers to the object</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$subscribeBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onSubscribeClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$episodesBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onEpisodesClicked</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>201</span> 
+<span class='line'>202</span> </span><span class="WHIT">    </span><span class="COMM">// Add the item to the grid</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">    </span><span class="NAME">this._grid.addItem</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>205</span> 
+<span class='line'>206</span> </span><span class="COMM">/**
+<span class='line'>207</span>  * Refreshes the grid and updates the items based on the latest data
+<span class='line'>208</span>  * @param {Array.&lt;Object>} showData The updated show data.
+<span class='line'>209</span>  */</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="NAME">gva.component.ShowGrid.prototype.refresh</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">showData</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>211</span> 
+<span class='line'>212</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$gridItems</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._grid.getItems</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$gridItem</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$subscribeBtn</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$linkText</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showObj</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showID</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> 
+<span class='line'>219</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$gridItems.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>220</span> 
+<span class='line'>221</span> </span><span class="WHIT">        </span><span class="NAME">$gridItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$gridItems</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>222</span> 
+<span class='line'>223</span> </span><span class="WHIT">        </span><span class="COMM">// Get the show ID from the elements data attribute</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">        </span><span class="NAME">showID</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.dataset.get</span><span class="PUNC">(</span><span class="NAME">$gridItem</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'showid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>225</span> 
+<span class='line'>226</span> </span><span class="WHIT">        </span><span class="COMM">// Find the corresponding show data object</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">        </span><span class="NAME">showObj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.array.find</span><span class="PUNC">(</span><span class="NAME">showData</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">show</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">show.id</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">showID</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>230</span> 
+<span class='line'>231</span> </span><span class="WHIT">        </span><span class="COMM">// Update the subscribe button based on the new data</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">        </span><span class="NAME">$subscribeBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'a.subscribe'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$gridItem</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">        </span><span class="NAME">$linkText</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.query</span><span class="PUNC">(</span><span class="STRN">'em'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$subscribeBtn</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> 
+<span class='line'>235</span> </span><span class="WHIT">        </span><span class="COMM">// Update the text content</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">showObj</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">showObj.subscribed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">$subscribeBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'subscribed'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.setTextContent</span><span class="PUNC">(</span><span class="NAME">$linkText</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Remove'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">$subscribeBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'subscribed'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">            </span><span class="NAME">goog.dom.setTextContent</span><span class="PUNC">(</span><span class="NAME">$linkText</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Subscribe'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>245</span> 
+<span class='line'>246</span> </span><span class="COMM">/**
+<span class='line'>247</span>  * Event handler for when an item's subscribe button is clicked
+<span class='line'>248</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>249</span>  */</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onSubscribeClicked</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>251</span> 
+<span class='line'>252</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>253</span> 
+<span class='line'>254</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">event.currentTarget</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showID</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.dataset.get</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'showid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subscribed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.classes.has</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'subscribed'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>257</span> 
+<span class='line'>258</span> </span><span class="WHIT">    </span><span class="COMM">// Add or remove the subscription based on the current state</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">subscribed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">        </span><span class="NAME">this._userModel.removeUserSubscription</span><span class="PUNC">(</span><span class="NAME">showID</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">        </span><span class="NAME">this._userModel.addUserSubscription</span><span class="PUNC">(</span><span class="NAME">showID</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> 
+<span class='line'>266</span> </span><span class="COMM">/**
+<span class='line'>267</span>  * Event handler for when an item's episode button is clicked
+<span class='line'>268</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>269</span>  */</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onEpisodesClicked</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>271</span> 
+<span class='line'>272</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>273</span> 
+<span class='line'>274</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">event.currentTarget</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>275</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'title'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">slug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$item.getAttribute</span><span class="PUNC">(</span><span class="STRN">'href'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> 
+<span class='line'>278</span> </span><span class="WHIT">    </span><span class="NAME">gva.controller.ApplicationController.navigate</span><span class="PUNC">(</span><span class="NAME">slug</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>280</span> 
+<span class='line'>281</span> 
+<span class='line'>282</span> </span><span class="COMM">/**
+<span class='line'>283</span>  * Initializes the draggable shows and the subscription drop target.
+<span class='line'>284</span>  */</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="NAME">gva.component.ShowGrid.prototype.initDragDrop</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>286</span> 
+<span class='line'>287</span> </span><span class="WHIT">  </span><span class="COMM">// Get subscription component instance.</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">  </span><span class="NAME">this._subscriptions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">gva.component.ComponentInitializer.getComponentByQuery</span><span class="PUNC">(</span><span class="STRN">'#subscriptions'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> 
+<span class='line'>290</span> </span><span class="WHIT">  </span><span class="COMM">// Get show articles.</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$gridItems</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._grid.getItems</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> 
+<span class='line'>293</span> </span><span class="WHIT">  </span><span class="COMM">// Initialize DragDropGroup</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">  </span><span class="NAME">this._draggableShows</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">gva.ShowDragDropGroup</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>295</span> 
+<span class='line'>296</span> </span><span class="WHIT">  </span><span class="COMM">// Add draggable items.</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">  </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$gridItems.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>298</span> 
+<span class='line'>299</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$gridItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$gridItems</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> 
+<span class='line'>301</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$draggableItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.getElementsByTagNameAndClass</span><span class="PUNC">(</span><span class="STRN">'figure'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$gridItem</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>302</span> 
+<span class='line'>303</span> </span><span class="WHIT">    </span><span class="COMM">// Get data for the draggable to carry.</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showID</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.dataset.get</span><span class="PUNC">(</span><span class="NAME">$gridItem</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'showid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">show</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._dataModel.getShowByID</span><span class="PUNC">(</span><span class="NAME">showID</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">    </span><span class="NAME">data</span><span class="PUNC">[</span><span class="STRN">'title'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">show.title</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">    </span><span class="NAME">data</span><span class="PUNC">[</span><span class="STRN">'showID'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">showID</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> 
+<span class='line'>310</span> </span><span class="WHIT">    </span><span class="NAME">this._draggableShows.addItem</span><span class="PUNC">(</span><span class="NAME">$draggableItem</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>311</span> 
+<span class='line'>312</span> </span><span class="WHIT">    </span><span class="COMM">// Set hover states for revealing droppable area/instructions.</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$gridItem</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.MOUSEOVER</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.onDraggableMouseOver</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">$gridItem</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.MOUSEOUT</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.onDraggableMouseOut</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>316</span> 
+<span class='line'>317</span> </span><span class="WHIT">  </span><span class="COMM">// Init droppable area and set as target for draggables.</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$dropAreaEl</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._subscriptions.$actionIndicator</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">  </span><span class="NAME">this._dropArea</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.fx.DragDrop</span><span class="PUNC">(</span><span class="NAME">$dropAreaEl</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> 
+<span class='line'>321</span> </span><span class="WHIT">  </span><span class="NAME">this._draggableShows.addTarget</span><span class="PUNC">(</span><span class="NAME">this._dropArea</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>322</span> 
+<span class='line'>323</span> </span><span class="WHIT">  </span><span class="COMM">// Add DragDrop classes</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">  </span><span class="NAME">this._draggableShows.setSourceClass</span><span class="PUNC">(</span><span class="STRN">'source'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">  </span><span class="NAME">this._draggableShows.setDragClass</span><span class="PUNC">(</span><span class="STRN">'dragging'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>326</span> 
+<span class='line'>327</span> </span><span class="WHIT">  </span><span class="COMM">// Init to add listeners and start the drag/drop action.</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">  </span><span class="NAME">this._draggableShows.init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>329</span> 
+<span class='line'>330</span> </span><span class="WHIT">  </span><span class="COMM">// Set custom dragdrop listeners.</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">  </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._draggableShows</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.AbstractDragDrop.EventType.DRAGSTART</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onDragStart</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">  </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._draggableShows</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.AbstractDragDrop.EventType.DRAGEND</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onDragEnd</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">  </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._dropArea</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.AbstractDragDrop.EventType.DROP</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onDrop</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> 
+<span class='line'>336</span> </span><span class="COMM">/**
+<span class='line'>337</span>  * Event handler for when a show starts being dragged.
+<span class='line'>338</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>339</span>  */</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onDragStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">  </span><span class="NAME">this.toggleDropArea</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">  </span><span class="NAME">this.dragging</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>344</span> 
+<span class='line'>345</span> 
+<span class='line'>346</span> </span><span class="COMM">/**
+<span class='line'>347</span>  * Event handler for when a show finishes being dragged.
+<span class='line'>348</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>349</span>  */</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onDragEnd</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">  </span><span class="NAME">this.dragging</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>352</span> 
+<span class='line'>353</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.recentlyDropped</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">    </span><span class="NAME">this.toggleDropArea</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>356</span> 
+<span class='line'>357</span> </span><span class="WHIT">  </span><span class="NAME">this.recentlyDropped</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>359</span> 
+<span class='line'>360</span> 
+<span class='line'>361</span> </span><span class="COMM">/**
+<span class='line'>362</span>  * Event handler for when a show is dropped onto the target.
+<span class='line'>363</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>364</span>  */</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onDrop</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>366</span> 
+<span class='line'>367</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">showData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">event.dragSourceItem.data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>368</span> 
+<span class='line'>369</span> </span><span class="WHIT">  </span><span class="COMM">// Determine if already subscribed.</span><span class="WHIT">
+<span class='line'>370</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subscribed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>371</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subscriptions</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._userModel.getUserSubscriptions</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>372</span> 
+<span class='line'>373</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">goog.array.indexOf</span><span class="PUNC">(</span><span class="NAME">subscriptions</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">showData</span><span class="PUNC">[</span><span class="STRN">'showID'</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">    </span><span class="NAME">subscribed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>376</span> 
+<span class='line'>377</span> </span><span class="WHIT">  </span><span class="COMM">// Add or remove the subscription based on the current state</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">subscribed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">    </span><span class="NAME">this.recentlyDropped</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="WHIT">    </span><span class="NAME">this._userModel.addUserSubscription</span><span class="PUNC">(</span><span class="NAME">showData</span><span class="PUNC">[</span><span class="STRN">'showID'</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">    </span><span class="NAME">this.showDropConfirmation</span><span class="PUNC">(</span><span class="NAME">showData</span><span class="PUNC">[</span><span class="STRN">'title'</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>384</span> 
+<span class='line'>385</span> 
+<span class='line'>386</span> </span><span class="COMM">/**
+<span class='line'>387</span>  * Slides the subscription button up and down to reveal the droppable area.
+<span class='line'>388</span>  * @param {Boolean} display Set to true to reveal the droppable area and false to close it.
+<span class='line'>389</span>  */</span><span class="WHIT">
+<span class='line'>390</span> </span><span class="NAME">gva.component.ShowGrid.prototype.toggleDropArea</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">display</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>391</span> 
+<span class='line'>392</span> </span><span class="WHIT">  </span><span class="NAME">clearTimeout</span><span class="PUNC">(</span><span class="NAME">this.closeSubscriptionsTimer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>393</span> 
+<span class='line'>394</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">display</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._subscriptions.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'up'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.dragging</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">    </span><span class="NAME">this.closeSubscriptionsTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="WHIT">      </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">self._subscriptions.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'up'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="NUMB">500</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>404</span> 
+<span class='line'>405</span> </span><span class="COMM">/**
+<span class='line'>406</span>  * Updates the action indicator text/icon to display a confirmation t=emporarily.
+<span class='line'>407</span>  * @param {String} showName The name of the show that has been added.
+<span class='line'>408</span>  */</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="NAME">gva.component.ShowGrid.prototype.showDropConfirmation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">showName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>410</span> 
+<span class='line'>411</span> </span><span class="WHIT">  </span><span class="NAME">this.resetTimers</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>412</span> 
+<span class='line'>413</span> </span><span class="WHIT">  </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._subscriptions.$actionIndicator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'confirm-addition'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">  </span><span class="NAME">this._subscriptions.$actionStatus.innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">showName</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">' added'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>415</span> 
+<span class='line'>416</span> </span><span class="WHIT">  </span><span class="NAME">this.confirmationTextTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.hideDropConfirmation</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.CONFIRMATION_DURATION</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>417</span> </span><span class="WHIT">  </span><span class="NAME">this.confirmationCloseTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">    </span><span class="NAME">this.toggleDropArea</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">    </span><span class="NAME">this.confirmationCloseTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.CONFIRMATION_DURATION</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NUMB">250</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>422</span> 
+<span class='line'>423</span> 
+<span class='line'>424</span> </span><span class="COMM">/**
+<span class='line'>425</span>  * Updates the action indicator text/icon to default display.
+<span class='line'>426</span>  */</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="NAME">gva.component.ShowGrid.prototype.hideDropConfirmation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>428</span> </span><span class="WHIT">  </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">this._subscriptions.$actionIndicator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'confirm-addition'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>429</span> </span><span class="WHIT">  </span><span class="NAME">this._subscriptions.$actionStatus.innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.DROP_INSTRUCTIONS</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>431</span> 
+<span class='line'>432</span> 
+<span class='line'>433</span> </span><span class="COMM">/**
+<span class='line'>434</span>  * Event handler for mouseover events on draggable shows.
+<span class='line'>435</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>436</span>  */</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onDraggableMouseOver</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">  </span><span class="NAME">this.toggleDropArea</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>439</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>440</span> 
+<span class='line'>441</span> 
+<span class='line'>442</span> </span><span class="COMM">/**
+<span class='line'>443</span>  * Event handler for mouseout events on draggable shows.
+<span class='line'>444</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>445</span>  */</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="NAME">gva.component.ShowGrid.prototype.onDraggableMouseOut</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.confirmationCloseTimer</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>448</span> </span><span class="WHIT">    </span><span class="NAME">this.toggleDropArea</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>450</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>451</span> 
+<span class='line'>452</span> 
+<span class='line'>453</span> </span><span class="COMM">/**
+<span class='line'>454</span>  * Clears and nulls all drop area confirmation timeouts.
+<span class='line'>455</span>  */</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="NAME">gva.component.ShowGrid.prototype.resetTimers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="WHIT">  </span><span class="NAME">clearTimeout</span><span class="PUNC">(</span><span class="NAME">this.confirmationTextTimer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>458</span> </span><span class="WHIT">  </span><span class="NAME">clearTimeout</span><span class="PUNC">(</span><span class="NAME">this.confirmationCloseTimer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>459</span> </span><span class="WHIT">  </span><span class="NAME">this.confirmationTextTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">  </span><span class="NAME">this.confirmationCloseTimer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>462</span> 
+<span class='line'>463</span> 
+<span class='line'>464</span> </span><span class="COMM">/**
+<span class='line'>465</span>  * Export the fully qualified class name of this component for dependency injection.
+<span class='line'>466</span>  */</span><span class="WHIT">
+<span class='line'>467</span> </span><span class="NAME">goog.exportSymbol</span><span class="PUNC">(</span><span class="STRN">'gva.component.ShowGrid'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">gva.component.ShowGrid</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>468</span> </span></pre></body></html>

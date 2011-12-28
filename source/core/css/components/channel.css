@@ -1,0 +1,575 @@
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#channel {
+  width: 278px;
+  height: 100%;
+  position: absolute;
+  border-width: 0 4px 0 0;
+  
+  -webkit-transition-property: left, right;
+  -webkit-transition-duration: 150ms;
+  -webkit-transition-timing-function: ease-out;
+  -moz-transition-property: left, right;
+  -moz-transition-duration: 150ms;
+  -moz-transition-timing-function: ease-out;
+  transition-property: left, right;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+
+/**
+ * Header & Sorting
+ * ======================================================== */
+
+
+#channel header {
+  padding: 16px 0 0 30px;
+  text-transform: uppercase;
+}
+
+#channel header h2 {
+  text-transform: none;
+  font-size: 27px;
+  text-align: left;
+  font-weight: 900;
+}
+
+#channel header h2 .icon {
+  width: 16px;
+  height: 20px;
+  margin-right: 6px;
+  position: relative;
+  top: 2px;
+  background-position: -280px -53px;
+}
+
+#channel header .sort {
+  font-size: 12px;
+  line-height: 31px;
+  position: absolute;
+  top: 65px;
+  left: 0;
+  height: 31px;
+  width: 100%;
+  border-bottom: 1px solid;
+}
+
+#channel header .sort a {
+  font-size: 12px;
+  text-transform: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+#channel header .sort a.show-sort {
+  border-right: 1px solid;
+  padding-right: 10px;
+}
+
+#channel header .sort a.airdate-sort {
+  padding-left: 10px;
+}
+
+#channel header .sort a .icon {
+  width: 10px;
+  height: 10px;
+}
+
+#channel header .sort a.show-sort .icon {
+  background-position: -400px -125px !important;
+  margin: 0 3px 0 30px;
+  position: relative;
+  top: 2px;
+}
+
+#channel header .sort a.grouped .icon {
+  background-position: -380px -125px !important;
+}
+
+#channel header .sort a.show-sort:hover .icon {
+  background-position: -380px -155px;
+}
+
+#channel header .sort a.airdate-sort .icon {
+  width: 8px;
+  height: 6px;
+  background-position: -437px -125px !important;
+  margin-left: 7px;
+}
+
+#channel header .sort a.airdate-sort:hover .icon {
+  background-position: -437px -137px;
+}
+
+#channel header .sort a.ascending .icon {
+  background-position: -427px -125px !important;
+}
+
+#channel header .sort a.ascending:hover .icon {
+  background-position: -427px -137px;
+}
+
+
+/**
+ * Episode list
+ * ======================================================== */
+
+
+#episode-list {
+  width: 250px;
+  position: absolute;
+  top: 112px;
+  bottom: 0px;
+  overflow-y: hidden;
+  list-style: none;
+}
+
+#channel ul {
+  width: 210px;
+  list-style: none;
+}
+
+#channel li {
+  width: 240px;
+}
+#channel li.now-playing {
+  border-bottom: 1px solid;
+}
+
+#channel li .episode h3,
+#channel li p,
+#channel li a.show-link {
+  display: none;
+}
+
+#channel li.now-playing .episode h3,
+#channel li.now-playing p,
+#channel li.now-playing a.show-link {
+  display: block;
+}
+
+#channel li .episode {
+  padding: 10px 0 5px 30px;
+}
+#channel li.now-playing .episode {
+  padding: 0 0 17px 30px;
+}
+
+
+/**
+ * Accordion Styles
+ * ======================================================== */
+
+#channel ul.accordion li {
+  overflow: hidden;
+}
+
+#channel ul.accordion li .show-tab {
+  border-bottom: 1px solid;  
+  height: 46px;
+  display: block;
+  cursor: pointer;
+  
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#channel ul.accordion li.expanded .show-tab {
+  border-bottom: none;
+}
+
+#channel ul.accordion li .show-tab h3 {
+  white-space:nowrap;  
+  font-size: 20px;
+  line-height: 46px;
+  font-weight: normal;
+}
+
+#channel ul.accordion li .show-tab h3 .icon {
+  width: 6px;
+  height: 12px;
+  background-position: -430px -150px;
+  margin: 0 13px 0 12px;
+  position: relative;
+  top: -1px;
+  
+  
+  transition: transform 150ms ease-out 0s;
+  -moz-transition: -moz-transform 150ms ease-out 0s;
+  -webkit-transition: -webkit-transform 150ms ease-out 0s;
+  
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+#channel ul.accordion li.expanded .show-tab .icon {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+#channel ul.accordion li.closing .show-tab .icon {
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+#channel ul.accordion ul {
+  display: none;
+}
+
+#channel ul.accordion li.expanded ul {
+  display: block;
+}
+
+
+
+/**
+ * Thumbnail and play/remove overlay
+ * ======================================================== */
+
+#channel li .episode figure {
+  position: relative;
+  width: 202px;
+  height: 111px;
+  border: 4px solid;
+  cursor: pointer;
+  
+  -webkit-transition: border-color 150ms ease-out 0ms;
+  -moz-transition: border-color 150ms ease-out 0ms;
+  transition: border-color 150ms ease-out 0ms;
+}
+
+#channel li.now-playing .episode figure {
+  cursor: default;
+}
+
+#channel li .episode figure span {
+  font-size: 11px;
+  font-weight: bold;
+  position: absolute;
+  display: none;
+  height: 21px;
+  line-height: 21px;
+  text-align: center;
+  width: 78px;
+  left: -4px;
+  top: 92px;
+}
+
+#channel li.now-playing .episode figure span {
+  display: block;
+}
+
+#channel .episode img {
+  width: 202px;
+  height: 111px;
+}
+
+#channel nav {
+	position: absolute;
+	left: 107px;
+	bottom: 80px;
+	z-index: 1;
+}
+
+#channel nav a {
+	text-decoration: none;
+	text-transform: uppercase;
+	position: absolute;
+	overflow: hidden;
+	font-size: 12px;
+	height: 40px;
+	width: 100px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+#channel nav a div {
+	
+	-webkit-transition-property: left, right, background;
+  -webkit-transition-duration: 300ms, 300ms, 150ms;
+  -webkit-transition-delay: 40ms, 0ms;
+  -webkit-transition-timing-function: cubic-bezier(0.860, 0.000, 0.070, 1.000), cubic-bezier(0.860, 0.000, 0.070, 1.000), ease-out;
+  
+  -moz-transition-property: left, right, background;
+  -moz-transition-duration: 300ms, 300ms, 150ms;
+  -moz-transition-delay: 40ms, 0ms;
+  -moz-transition-timing-function: cubic-bezier(0.860, 0.000, 0.070, 1.000), cubic-bezier(0.860, 0.000, 0.070, 1.000), ease-out;
+  
+  transition-property: left, right, background;
+  transition-duration: 300ms, 300ms, 150ms;
+  transition-delay: 40ms, 0ms;
+  transition-timing-function: cubic-bezier(0.860, 0.000, 0.070, 1.000), cubic-bezier(0.860, 0.000, 0.070, 1.000), ease-out;
+	
+	line-height: 32px;
+	text-align: center;
+	position: absolute;
+  display: block;
+  height: 30px;
+  width: 67px;
+  top: 0px;
+}
+
+#channel nav a.play {
+	right: 0px;
+}
+
+#channel nav a.remove {
+	left: 0px;
+}
+
+#channel nav a.play div {
+	box-shadow: 0px 1px 3px rgba(0,0,0,0.53), inset -1px 0px 0px rgba(255,255,255,0.15);
+	border-radius: 2px 0px 0px 2px;
+	right: -90px;
+}
+
+#channel nav a.remove div {
+	box-shadow: 0px 1px 3px rgba(0,0,0,0.53), inset 1px 0px 0px rgba(0,0,0,0.15);
+	border-radius: 0px 2px 2px 0px;
+	left: -90px;
+}
+
+#channel figure {
+  position: relative;
+}
+
+#channel figure a.play {
+  background-color: transparent;
+  background-position: -225px -120px;
+  background-repeat: no-repeat;
+  height: 43px;
+  width: 43px;
+  left: 50%;
+  margin: 33px 0 0 -23px;
+  opacity: 0;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  position: absolute;
+  text-indent: -999em;
+  color: transparent;
+
+  -webkit-transition: opacity 150ms ease-out 0ms;
+  -moz-transition: opacity 150ms ease-out 0ms;
+  transition: opacity 150ms ease-out 0ms;
+}
+
+#channel figure:hover a.play {
+  opacity: 1;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+
+#channel .now-playing figure:hover a.play {
+  opacity: 0;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+}
+
+#channel figure:hover nav a.play div {
+  right: 0px;
+}
+
+#channel figure:hover  nav a.remove div {
+  left: 0px;
+}
+
+#channel a.play .icon {
+  width: 8px;
+  height: 11px;
+  background-position: -380px -55px;
+  margin-right: 7px;
+  position: relative;
+  bottom: -1px;
+}
+#channel a.remove .icon {
+  width: 10px;
+  height: 3px;
+  background-position: -400px -55px;
+  margin-right: 7px;
+  position: relative;
+  bottom: 3px;
+}
+
+
+
+
+/**
+ * Episode text
+ * ======================================================== */
+
+
+#channel li .episode h3 {
+  font-size: 17px;
+  line-height: 20px;
+  margin: 8px 0;
+}
+
+#channel li .episode p {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+#channel li .episode p.description {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed;
+}
+
+#channel li .episode p.details .icon {
+  width: 9px;
+  height: 9px;
+  margin: 0 2px;
+  background-position: -350px -55px;
+}
+
+#channel li .episode a.show-link {
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 25px;
+  text-decoration: none;
+}
+
+#channel li .episode a.show-link .icon {
+  width: 11px;
+  height: 9px;
+  margin-right: 4px;
+  background-position: -276px -27px;
+}
+
+#channel li .episode p.details,
+#search .episode a.show-link {
+  font-size: 11px;
+}
+
+
+
+/**
+ * Toggle tab
+ * ======================================================== */
+
+#channel .toggle {
+  width: 15px;
+  height: 47px;
+  position: absolute;
+  right: -19px;
+  top: 45%;
+  z-index: 1;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  
+  -moz-border-radius: 0 2px 2px 0;
+  -webkit-border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;
+  
+  cursor: pointer;
+}
+
+#channel .toggle span {
+  background-position: -130px -80px;
+  width: 10px;
+  height: 11px;
+  margin: 20px 0 0 2px;
+}
+
+#channel.expanded .toggle span {
+  background-position: -130px -105px;
+  width: 8px;
+  height: 4px;
+  margin: 22px 0 0 2px;
+}
+
+
+
+/**
+ * Scrollbar
+ * ======================================================== */
+
+
+#channel .channel-scroll {
+  position: absolute;
+  right: 13px;
+  top: 112px;
+  bottom: 0;
+  width: 12px;
+}
+
+#channel .channel-scroll #channel-slider {
+  position: absolute;
+  top: 29px;
+  bottom: 27px;
+  left: 0;
+  right: 0;
+  border: 1px solid;
+}
+
+#channel #channel-slider .bar-knob {
+  position: absolute;
+  left: 0 !important;
+  cursor: pointer;
+  width: 100%;
+  height: 28px;
+}
+
+#channel #channel-slider .bar-knob .knob-graphic {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  cursor: pointer;
+  width: 12px;
+  height: 28px;
+
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.75), inset -1px 0px 1px rgba(255,255,255,0.75);
+  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.75), inset -1px 0px 1px rgba(255,255,255,0.75);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.75), inset -1px 0px 1px rgba(255,255,255,0.75);
+}
+
+#channel .channel-scroll .scroll-button {
+  width: 18px;
+  height: 17px;
+  position: absolute;
+  bottom: 8px;
+  right: -3px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#channel .channel-scroll .scroll-button.up {
+  top: 5px;
+}
+
+#channel .channel-scroll .scroll-button .icon {
+  background-position: -253px -77px;
+  width: 12px;
+  height: 7px;
+}
+
+#channel .channel-scroll .scroll-button.up .icon {
+  background-position: -253px -53px;
+}
+
+#channel .channel-scroll .scroll-button:hover .icon {
+  background-position: -253px -28px;
+}
+
+#channel .channel-scroll .scroll-button.up:hover .icon {
+  background-position: -253px -1px;
+}

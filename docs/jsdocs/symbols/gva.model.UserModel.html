@@ -1,0 +1,989 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>JsDoc Reference - gva.model.UserModel</title>
+
+		<style type="text/css">
+			/* default.css */
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: block;
+	padding: 8px;
+	border: 1px dashed #ccc;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/gva.bootstrap.html">gva.bootstrap</a></li>
+	
+	<li><a href="../symbols/gva.component.BaseComponent.html">gva.component.BaseComponent</a></li>
+	
+	<li><a href="../symbols/gva.component.Channel.html">gva.component.Channel</a></li>
+	
+	<li><a href="../symbols/gva.component.ComponentInitializer.html">gva.component.ComponentInitializer</a></li>
+	
+	<li><a href="../symbols/gva.component.EpisodeGrid.html">gva.component.EpisodeGrid</a></li>
+	
+	<li><a href="../symbols/gva.component.FlexibleGrid.html">gva.component.FlexibleGrid</a></li>
+	
+	<li><a href="../symbols/gva.component.Html5Player.html">gva.component.Html5Player</a></li>
+	
+	<li><a href="../symbols/gva.component.SearchForm.html">gva.component.SearchForm</a></li>
+	
+	<li><a href="../symbols/gva.component.SearchGrid.html">gva.component.SearchGrid</a></li>
+	
+	<li><a href="../symbols/gva.component.SectionMenu.html">gva.component.SectionMenu</a></li>
+	
+	<li><a href="../symbols/gva.component.ShowDetails.html">gva.component.ShowDetails</a></li>
+	
+	<li><a href="../symbols/gva.component.ShowGrid.html">gva.component.ShowGrid</a></li>
+	
+	<li><a href="../symbols/gva.component.Subscriptions.html">gva.component.Subscriptions</a></li>
+	
+	<li><a href="../symbols/gva.component.VideoPlayer.html">gva.component.VideoPlayer</a></li>
+	
+	<li><a href="../symbols/gva.controller.AbstractController.html">gva.controller.AbstractController</a></li>
+	
+	<li><a href="../symbols/gva.controller.ApplicationController.html">gva.controller.ApplicationController</a></li>
+	
+	<li><a href="../symbols/gva.controller.BackgroundController.html">gva.controller.BackgroundController</a></li>
+	
+	<li><a href="../symbols/gva.controller.ChannelController.html">gva.controller.ChannelController</a></li>
+	
+	<li><a href="../symbols/gva.controller.ControllerInitializer.html">gva.controller.ControllerInitializer</a></li>
+	
+	<li><a href="../symbols/gva.controller.EpisodeController.html">gva.controller.EpisodeController</a></li>
+	
+	<li><a href="../symbols/gva.controller.FooterController.html">gva.controller.FooterController</a></li>
+	
+	<li><a href="../symbols/gva.controller.HeaderController.html">gva.controller.HeaderController</a></li>
+	
+	<li><a href="../symbols/gva.controller.SearchController.html">gva.controller.SearchController</a></li>
+	
+	<li><a href="../symbols/gva.controller.ShowController.html">gva.controller.ShowController</a></li>
+	
+	<li><a href="../symbols/gva.controller.SubscriptionsController.html">gva.controller.SubscriptionsController</a></li>
+	
+	<li><a href="../symbols/gva.model.DataModel.html">gva.model.DataModel</a></li>
+	
+	<li><a href="../symbols/gva.model.UserModel.html">gva.model.UserModel</a></li>
+	
+	<li><a href="../symbols/gva.ShowDragDropGroup.html">gva.ShowDragDropGroup</a></li>
+	
+	<li><a href="../symbols/gva.util.Grid.html">gva.util.Grid</a></li>
+	
+	<li><a href="../symbols/gva.util.Notify.html">gva.util.Notify</a></li>
+	
+	<li><a href="../symbols/gva.views.NotificationView.html">gva.views.NotificationView</a></li>
+	
+	<li><a href="../symbols/gva.vo.Episode.html">gva.vo.Episode</a></li>
+	
+	<li><a href="../symbols/gva.vo.EpisodesData.html">gva.vo.EpisodesData</a></li>
+	
+	<li><a href="../symbols/gva.vo.Show.html">gva.vo.Show</a></li>
+	
+	<li><a href="../symbols/gva.vo.ShowsData.html">gva.vo.ShowsData</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class gva.model.UserModel
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+				
+			
+				
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/source_core_js_gva_model_UserModel.js.html">UserModel.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class gva.model.UserModel.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/gva.model.UserModel.html#constructor">gva.model.UserModel</a></b>()
+							</div>
+							<div class="description">Creates a new UserModel instance, or returns the singleton instance.</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class gva.model.UserModel.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								gva.model.UserModel.<b><a href="../symbols/gva.model.UserModel.html#.EventType">EventType</a></b>
+								</div>
+								<div class="description">Enumeration for event types dispatched from this class</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								gva.model.UserModel.<b><a href="../symbols/gva.model.UserModel.html#.TOKEN_LAST_EPISODE_CHECK">TOKEN_LAST_EPISODE_CHECK</a></b>
+								</div>
+								<div class="description">Enumeration for UserModel local storage tokens.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								gva.model.UserModel.<b><a href="../symbols/gva.model.UserModel.html#.TOKEN_SUBSCRIPTIONS">TOKEN_SUBSCRIPTIONS</a></b>
+								</div>
+								<div class="description">Enumeration for UserModel local storage tokens.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								gva.model.UserModel.<b><a href="../symbols/gva.model.UserModel.html#.TOKEN_WATCHED_EPISODES">TOKEN_WATCHED_EPISODES</a></b>
+								</div>
+								<div class="description">Enumeration for UserModel local storage tokens.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class gva.model.UserModel.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#addUserSubscription">addUserSubscription</a></b>(showID)
+								</div>
+								<div class="description">Subscribes the user to a show.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#addValueToToken">addValueToToken</a></b>(token, data)
+								</div>
+								<div class="description">Pushes data into a given token</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#getDataAtToken">getDataAtToken</a></b>(token)
+								</div>
+								<div class="description">Retrieves a token from local storage and returns the parsed data</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#getLastEpisodeCheck">getLastEpisodeCheck</a></b>()
+								</div>
+								<div class="description">Retrieves the time of the last time the user requested episode data.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#getUserSubscriptions">getUserSubscriptions</a></b>()
+								</div>
+								<div class="description">Retrieves a list of show IDs representing the user's subscriptions.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#getWatchedEpisodes">getWatchedEpisodes</a></b>()
+								</div>
+								<div class="description">Retrieves a list of the episodes a user has already watched</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#removeUserSubscription">removeUserSubscription</a></b>(showID)
+								</div>
+								<div class="description">Unsubscribes the user from a given show.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#removeValueFromToken">removeValueFromToken</a></b>(token, data)
+								</div>
+								<div class="description">Removes a value from a given token</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#setWatchedEpisode">setWatchedEpisode</a></b>(episodeID)
+								</div>
+								<div class="description">Marks a given episode as watched</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/gva.model.UserModel.html#updateLastEpisodeCheck">updateLastEpisodeCheck</a></b>()
+								</div>
+								<div class="description">Sets the last episode check time to the current time.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>gva.model.UserModel</b>()
+				</div>
+				
+				<div class="description">
+					Creates a new UserModel instance, or returns the singleton instance.
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name=".EventType"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">gva.model.UserModel.</span><b>EventType</b>
+					
+					</div>
+					<div class="description">
+						Enumeration for event types dispatched from this class
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".TOKEN_LAST_EPISODE_CHECK"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">gva.model.UserModel.</span><b>TOKEN_LAST_EPISODE_CHECK</b>
+					
+					</div>
+					<div class="description">
+						Enumeration for UserModel local storage tokens.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".TOKEN_SUBSCRIPTIONS"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">gva.model.UserModel.</span><b>TOKEN_SUBSCRIPTIONS</b>
+					
+					</div>
+					<div class="description">
+						Enumeration for UserModel local storage tokens.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".TOKEN_WATCHED_EPISODES"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">gva.model.UserModel.</span><b>TOKEN_WATCHED_EPISODES</b>
+					
+					</div>
+					<div class="description">
+						Enumeration for UserModel local storage tokens.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="addUserSubscription"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addUserSubscription</b>(showID)
+					
+					</div>
+					<div class="description">
+						Subscribes the user to a show.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>showID</b>
+									
+								</dt>
+								<dd>The ID of the show to subscribe the user to.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="addValueToToken"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>addValueToToken</b>(token, data)
+					
+					</div>
+					<div class="description">
+						Pushes data into a given token
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>token</b>
+									
+								</dt>
+								<dd>The token to add data to.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>data</b>
+									
+								</dt>
+								<dd>The data to add to the given token.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getDataAtToken"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array}</span>
+					<b>getDataAtToken</b>(token)
+					
+					</div>
+					<div class="description">
+						Retrieves a token from local storage and returns the parsed data
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>token</b>
+									
+								</dt>
+								<dd>The name of the token to retrieve.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array}</span> The data stored under the given token.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getLastEpisodeCheck"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Date}</span>
+					<b>getLastEpisodeCheck</b>()
+					
+					</div>
+					<div class="description">
+						Retrieves the time of the last time the user requested episode data.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Date}</span> The date of the last check.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getUserSubscriptions"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array.<string>}</span>
+					<b>getUserSubscriptions</b>()
+					
+					</div>
+					<div class="description">
+						Retrieves a list of show IDs representing the user's subscriptions.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array.<string>}</span> A list of show IDs representing the user's subscriptions.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getWatchedEpisodes"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array.<string>}</span>
+					<b>getWatchedEpisodes</b>()
+					
+					</div>
+					<div class="description">
+						Retrieves a list of the episodes a user has already watched
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array.<string>}</span> A list of episode IDs.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="removeUserSubscription"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>removeUserSubscription</b>(showID)
+					
+					</div>
+					<div class="description">
+						Unsubscribes the user from a given show.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>showID</b>
+									
+								</dt>
+								<dd>The ID of the show to unsubscribe from.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="removeValueFromToken"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>removeValueFromToken</b>(token, data)
+					
+					</div>
+					<div class="description">
+						Removes a value from a given token
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>token</b>
+									
+								</dt>
+								<dd>The token to remove data from.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>data</b>
+									
+								</dt>
+								<dd>The item to remove from the given token.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setWatchedEpisode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setWatchedEpisode</b>(episodeID)
+					
+					</div>
+					<div class="description">
+						Marks a given episode as watched
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>episodeID</b>
+									
+								</dt>
+								<dd>The ID of the episode to mark as watched.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="updateLastEpisodeCheck"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>updateLastEpisodeCheck</b>()
+					
+					</div>
+					<div class="description">
+						Sets the last episode check time to the current time.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+			
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Dec 22 2011 17:41:23 GMT-0800 (PST)
+		</div>
+	</body>
+</html>

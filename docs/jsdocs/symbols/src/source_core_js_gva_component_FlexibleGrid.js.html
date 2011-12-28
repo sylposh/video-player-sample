@@ -1,0 +1,360 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span> Copyright 2011 Google
+<span class='line'>  3</span> 
+<span class='line'>  4</span> Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'>  5</span> you may not use this file except in compliance with the License.
+<span class='line'>  6</span> You may obtain a copy of the License at
+<span class='line'>  7</span> 
+<span class='line'>  8</span>     http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'>  9</span> 
+<span class='line'> 10</span> Unless required by applicable law or agreed to in writing, software
+<span class='line'> 11</span> distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 12</span> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 13</span> See the License for the specific language governing permissions and
+<span class='line'> 14</span> limitations under the License.
+<span class='line'> 15</span> */</span><span class="WHIT">
+<span class='line'> 16</span> 
+<span class='line'> 17</span> </span><span class="COMM">/**
+<span class='line'> 18</span>  * Provide a namespace for this class
+<span class='line'> 19</span>  */</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="NAME">goog.provide</span><span class="PUNC">(</span><span class="STRN">'gva.component.FlexibleGrid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="COMM">/**
+<span class='line'> 23</span>  * Import dependencies
+<span class='line'> 24</span>  */</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.array'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom.ViewportSizeMonitor'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.dom.classes'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.events'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.math.Rect'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'goog.style'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.easing'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="NAME">goog.require</span><span class="PUNC">(</span><span class="STRN">'gva.util.Grid'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> 
+<span class='line'> 35</span> 
+<span class='line'> 36</span> </span><span class="COMM">/**
+<span class='line'> 37</span>  * Creates a new FlexibleGrid instance.
+<span class='line'> 38</span>  * @constructor
+<span class='line'> 39</span>  */</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="NAME">gva.component.FlexibleGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 41</span> 
+<span class='line'> 42</span> </span><span class="WHIT">    </span><span class="NAME">this.$context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> 
+<span class='line'> 44</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 45</span>      * The grid boundaries.
+<span class='line'> 46</span>      * @type {goog.math.Rect}
+<span class='line'> 47</span>      */</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="NAME">this._bounds</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> 
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">    </span><span class="NAME">this._currentPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="NAME">this._totalPages</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> 
+<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 55</span>      * A list of grid items DOM elements
+<span class='line'> 56</span>      * @type {Array.&lt;Element>}
+<span class='line'> 57</span>      */</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">    </span><span class="NAME">this._$items</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> 
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="NAME">this._$prevBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="NAME">this._$nextBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 62</span> 
+<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 64</span>      * Monitors the viewport size so that the grid can flex.
+<span class='line'> 65</span>      * @type {goog.dom.ViewportSizeMonitor}
+<span class='line'> 66</span>      */</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="NAME">this._viewportMonitor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.dom.ViewportSizeMonitor</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 68</span> 
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 70</span>      * Enumeration for event types dispatched from this class
+<span class='line'> 71</span>      */</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">    </span><span class="NAME">gva.component.FlexibleGrid.EventType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 74</span>              * Dispatched whenever grid is refreshed.
+<span class='line'> 75</span>              */</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">            </span><span class="NAME">REFRESHED</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'FlexibleGrid::refreshed'</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> 
+<span class='line'> 79</span> </span><span class="WHIT">    </span><span class="COMM">// Call super constructor.</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">    </span><span class="NAME">gva.util.Grid.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> 
+<span class='line'> 83</span> </span><span class="COMM">/**
+<span class='line'> 84</span>  * Extend gva.util.Grid
+<span class='line'> 85</span>  */</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="NAME">goog.inherits</span><span class="PUNC">(</span><span class="NAME">gva.component.FlexibleGrid</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">gva.util.Grid</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 87</span> 
+<span class='line'> 88</span> 
+<span class='line'> 89</span> </span><span class="COMM">/**
+<span class='line'> 90</span>  * Initializes a new grid.
+<span class='line'> 91</span>  * @param {Element} $context The context element the grid is placed in.
+<span class='line'> 92</span>  * @param {number} cellWidth The width of each cell.
+<span class='line'> 93</span>  * @param {number} cellHeight The height of each cell.
+<span class='line'> 94</span>  * @param {number} cellSpacingX The horizontal space between each column.
+<span class='line'> 95</span>  * @param {number} cellSpacingY The vertical space between each row.
+<span class='line'> 96</span>  */</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.initialize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellHeight</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellSpacingX</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellSpacingY</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> 
+<span class='line'> 99</span> </span><span class="WHIT">    </span><span class="NAME">this.$context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$context</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="WHIT">    </span><span class="COMM">// Build the pagination menu</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">    </span><span class="NAME">this.createNavigation</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> 
+<span class='line'>104</span> </span><span class="WHIT">    </span><span class="COMM">// Bind event handlers</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">    </span><span class="NAME">this.addListeners</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>106</span> 
+<span class='line'>107</span> </span><span class="WHIT">    </span><span class="COMM">// Set up the fixed grid cell size.</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">    </span><span class="NAME">this.constructor.superClass_.setCellBounds.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellHeight</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellSpacingX</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cellSpacingY</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>109</span> 
+<span class='line'>110</span> </span><span class="WHIT">    </span><span class="COMM">// Resize to initial boundaries.</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">    </span><span class="NAME">this.resize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>113</span> 
+<span class='line'>114</span> </span><span class="COMM">/**
+<span class='line'>115</span>  * Creates the pagination navigation and appends it to the context
+<span class='line'>116</span>  */</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.createNavigation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>118</span> 
+<span class='line'>119</span> </span><span class="WHIT">    </span><span class="COMM">// Create a navigation node</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$nav</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.createDom</span><span class="PUNC">(</span><span class="STRN">'nav'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">$nav</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'pagination'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> 
+<span class='line'>123</span> </span><span class="WHIT">    </span><span class="COMM">// Create next and previous buttons</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">    </span><span class="NAME">this._$prevBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.createDom</span><span class="PUNC">(</span><span class="STRN">'a'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'href'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#'</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Previous Page'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">    </span><span class="NAME">this._$nextBtn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.dom.createDom</span><span class="PUNC">(</span><span class="STRN">'a'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'href'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'#'</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'Next Page'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>126</span> 
+<span class='line'>127</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._$prevBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'prev'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._$nextBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'next'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>129</span> 
+<span class='line'>130</span> </span><span class="WHIT">    </span><span class="COMM">// Add icons to them</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this._$prevBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.dom.createDom</span><span class="PUNC">(</span><span class="STRN">'span'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'class'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'icon'</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this._$nextBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.dom.createDom</span><span class="PUNC">(</span><span class="STRN">'span'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'class'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'icon'</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> 
+<span class='line'>134</span> </span><span class="WHIT">    </span><span class="COMM">// Add buttons to nav</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">$nav</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$prevBtn</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">$nav</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._$nextBtn</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> 
+<span class='line'>138</span> </span><span class="WHIT">    </span><span class="COMM">// Add all to the DOM</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$nav</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> 
+<span class='line'>142</span> </span><span class="COMM">/**
+<span class='line'>143</span>  * Binds event listeners to viewport resize and pagination mouse events
+<span class='line'>144</span>  */</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.addListeners</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>146</span> 
+<span class='line'>147</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for window resize in order to update the grid.</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._viewportMonitor</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.RESIZE</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.resize</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>149</span> 
+<span class='line'>150</span> </span><span class="WHIT">    </span><span class="COMM">// Listen for clicks on pagination links</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$prevBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onNavClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">    </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">this._$nextBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.events.EventType.CLICK</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.bind</span><span class="PUNC">(</span><span class="NAME">this.onNavClick</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> 
+<span class='line'>155</span> </span><span class="COMM">/**
+<span class='line'>156</span>  * Adds a DOM element to the grid
+<span class='line'>157</span>  * @param {Element} $item The DOM element to add to the grid.
+<span class='line'>158</span>  */</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.addItem</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">    </span><span class="COMM">// Append the item to the grid</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">    </span><span class="NAME">goog.dom.appendChild</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> 
+<span class='line'>163</span> </span><span class="WHIT">    </span><span class="COMM">// Store a reference</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">    </span><span class="NAME">this._$items.push</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>165</span> 
+<span class='line'>166</span> </span><span class="WHIT">    </span><span class="COMM">// Refresh the grid to accommodate the new item</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">    </span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> 
+<span class='line'>170</span> </span><span class="COMM">/**
+<span class='line'>171</span>  * Returns a list of all items controlled by the grid, including those that
+<span class='line'>172</span>  * might not be visible in the current page
+<span class='line'>173</span>  * @return {Array.&lt;Element>} All items (visible and hidden) in this grid.
+<span class='line'>174</span>  */</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.getItems</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._$items</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>178</span> 
+<span class='line'>179</span> </span><span class="COMM">/**
+<span class='line'>180</span>  * Removes all items from the grid and reset the current page and offset
+<span class='line'>181</span>  */</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.clear</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>183</span> 
+<span class='line'>184</span> </span><span class="WHIT">    </span><span class="COMM">// Remove any current items</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">    </span><span class="NAME">goog.array.forEach</span><span class="PUNC">(</span><span class="NAME">this._$items</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.removeNode</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> 
+<span class='line'>189</span> </span><span class="WHIT">    </span><span class="COMM">// Go back to the first page</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">    </span><span class="NAME">this._currentPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>192</span> 
+<span class='line'>193</span> </span><span class="WHIT">    </span><span class="COMM">// Clear the items array</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">    </span><span class="NAME">this._$items</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="COMM">/**
+<span class='line'>198</span>  * Navigates to the previous grid page
+<span class='line'>199</span>  */</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.prevPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">        </span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.cells</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">          </span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">        </span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'ltr'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> 
+<span class='line'>210</span> </span><span class="COMM">/**
+<span class='line'>211</span>  * Navigates to the next grid page
+<span class='line'>212</span>  */</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.nextPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">this._$items.length</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">this.cells</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">        </span><span class="NAME">this._currentIndex</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.cells</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">        </span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'rtl'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>219</span> 
+<span class='line'>220</span> </span><span class="COMM">/**
+<span class='line'>221</span>  * Refreshes the grid view and updates visible items, with an optional transition effect
+<span class='line'>222</span>  * @param {boolean} transition Whether to use a transition when switching items.
+<span class='line'>223</span>  * @param {string} direction The horizontal transition direction 'ltr' or 'rtl'.
+<span class='line'>224</span>  */</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.refresh</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">transition</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">direction</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>226</span> 
+<span class='line'>227</span> </span><span class="WHIT">    </span><span class="NAME">transition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">transition</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> 
+<span class='line'>229</span> </span><span class="WHIT">    </span><span class="COMM">// Refresh the super grid</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">    </span><span class="NAME">this.constructor.superClass_.refresh.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>231</span> 
+<span class='line'>232</span> </span><span class="WHIT">    </span><span class="COMM">// Compute the number of pages</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">    </span><span class="NAME">this._totalPages</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.ceil</span><span class="PUNC">(</span><span class="NAME">this._$items.length</span><span class="WHIT"> </span><span class="PUNC">/</span><span class="WHIT"> </span><span class="NAME">this.cells</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> 
+<span class='line'>235</span> </span><span class="WHIT">    </span><span class="COMM">// Calculate which items will be on screen</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">min</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._currentIndex</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">max</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">min</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.cells</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>238</span> 
+<span class='line'>239</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">windowWidth</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._viewportMonitor.getSize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">width</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>240</span> 
+<span class='line'>241</span> </span><span class="WHIT">    </span><span class="COMM">// Reposition elements.</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>243</span> 
+<span class='line'>244</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">j</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._$items.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>245</span> 
+<span class='line'>246</span> </span><span class="WHIT">        </span><span class="NAME">$item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._$items</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>247</span> 
+<span class='line'>248</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">min</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">max</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>249</span> 
+<span class='line'>250</span> </span><span class="WHIT">            </span><span class="NAME">coord</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.coords</span><span class="PUNC">[</span><span class="NAME">j</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>251</span> 
+<span class='line'>252</span> </span><span class="WHIT">            </span><span class="COMM">// Show and position the element if it should appear in the grid</span><span class="WHIT">
+<span class='line'>253</span> 
+<span class='line'>254</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">transition</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>255</span> 
+<span class='line'>256</span> </span><span class="WHIT">              </span><span class="COMM">// Position one screen left or right of final position and then slide to final position.</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">start</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">direction</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'ltr'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">windowWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">windowWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">end</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>259</span> 
+<span class='line'>260</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">slide</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.fx.dom.Slide</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">end</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">250</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.easing.easeOut</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> 
+<span class='line'>262</span> </span><span class="WHIT">              </span><span class="COMM">// Show element at the beginning of slide.</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">              </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">slide</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.Animation.EventType.BEGIN</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">                </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">                  </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">event.currentTarget.element</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">              </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>267</span> 
+<span class='line'>268</span> </span><span class="WHIT">              </span><span class="NAME">slide.play</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>270</span> 
+<span class='line'>271</span> </span><span class="WHIT">            </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">              </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">              </span><span class="NAME">goog.style.setPosition</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>275</span> 
+<span class='line'>276</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>277</span> 
+<span class='line'>278</span> </span><span class="WHIT">            </span><span class="COMM">// Hide the element if it doesn't appear in the grid</span><span class="WHIT">
+<span class='line'>279</span> 
+<span class='line'>280</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">transition</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">goog.style.isElementShown</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>281</span> 
+<span class='line'>282</span> </span><span class="WHIT">              </span><span class="COMM">// Slide from current position one screen left or right.</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">              </span><span class="NAME">coord</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.style.getPosition</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">start</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">end</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">direction</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'ltr'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">windowWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">coord.x</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">windowWidth</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">coord.y</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>286</span> 
+<span class='line'>287</span> </span><span class="WHIT">              </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">slide</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.fx.dom.Slide</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">end</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">250</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.easing.easeOut</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>288</span> 
+<span class='line'>289</span> </span><span class="WHIT">              </span><span class="COMM">// Hide element once off screen at the end of slide.</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">              </span><span class="NAME">goog.events.listen</span><span class="PUNC">(</span><span class="NAME">slide</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">goog.fx.Animation.EventType.END</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">                </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">                  </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">event.currentTarget.element</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">              </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>294</span> 
+<span class='line'>295</span> </span><span class="WHIT">              </span><span class="NAME">slide.play</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>297</span> 
+<span class='line'>298</span> </span><span class="WHIT">            </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">              </span><span class="NAME">goog.style.showElement</span><span class="PUNC">(</span><span class="NAME">$item</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>303</span> 
+<span class='line'>304</span> </span><span class="WHIT">    </span><span class="COMM">// Disable previous button if necessary</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">min</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._$prevBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'disabled'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">this._$prevBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'disabled'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>310</span> 
+<span class='line'>311</span> </span><span class="WHIT">    </span><span class="COMM">// Disable next button if necessary</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">max</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this._$items.length</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.add</span><span class="PUNC">(</span><span class="NAME">this._$nextBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'disabled'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">        </span><span class="NAME">goog.dom.classes.remove</span><span class="PUNC">(</span><span class="NAME">this._$nextBtn</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'disabled'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>317</span> 
+<span class='line'>318</span> 
+<span class='line'>319</span> </span><span class="WHIT">    </span><span class="COMM">// Dispatch refresh event for listeners.</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">event</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">goog.events.Event</span><span class="PUNC">(</span><span class="NAME">gva.component.FlexibleGrid.EventType.REFRESHED</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">    </span><span class="COMM">// event.data = this._$items[this._currentIndex];</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">    </span><span class="NAME">this.dispatchEvent</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>324</span> 
+<span class='line'>325</span> </span><span class="COMM">/**
+<span class='line'>326</span>  * Updates grid boundaries and refreshes the grid if necessary.
+<span class='line'>327</span>  * @param {goog.events.Event=} event The event that triggered the resize.
+<span class='line'>328</span>  */</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.resize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>330</span> 
+<span class='line'>331</span> </span><span class="WHIT">    </span><span class="COMM">// Get the current bounds of the DOM context.</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">    </span><span class="NAME">this._bounds</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">goog.style.getBounds</span><span class="PUNC">(</span><span class="NAME">this.$context</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> 
+<span class='line'>334</span> </span><span class="WHIT">    </span><span class="COMM">// Update grid boundaries to force recalculation.</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">    </span><span class="NAME">this.constructor.superClass_.setGridBounds.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._bounds.width</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._bounds.height</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>336</span> 
+<span class='line'>337</span> </span><span class="WHIT">    </span><span class="COMM">// Refresh the grid</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">    </span><span class="NAME">this.refresh</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>340</span> 
+<span class='line'>341</span> </span><span class="COMM">/**
+<span class='line'>342</span>  * Event handler for when an pagination link is clicked
+<span class='line'>343</span>  * @param {goog.events.Event} event The event which triggered the handler.
+<span class='line'>344</span>  */</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="NAME">gva.component.FlexibleGrid.prototype.onNavClick</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">event.currentTarget</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">this._$prevBtn</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">        </span><span class="NAME">this.prevPage</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">        </span><span class="NAME">this.nextPage</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">    </span><span class="NAME">event.preventDefault</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>353</span> </span></pre></body></html>

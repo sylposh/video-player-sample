@@ -1,0 +1,39 @@
+CACHE MANIFEST
+# updated: timestamp
+
+CACHE:
+404.html
+index.html
+notification.html
+
+#css files
+/core/css/gva.min.css
+/core/css/gva.notification.min.css
+/themes/os/css/style.css
+
+#js files
+/core/js/libs/modernizr.js
+/core/js/libs/swfobject.js
+/core/js/gva/NotificationView.js
+/core/js/gva.min.js
+
+#images
+/themes/os/img/default_thumbs/category.jpg
+/themes/os/img/default_thumbs/video.jpg
+/themes/os/img/channel-border-right.png
+/themes/os/img/sprites.png
+/themes/os/img/subscription-bg.png
+/themes/os/img/video-player.png
+
+#swfs
+/core/swf/expressinstall.swf
+/core/swf/videoplayer.swf
+
+#data
+# /data/config.json
+# /data/data.json
+
+FALLBACK:
+
+NETWORK:
+*

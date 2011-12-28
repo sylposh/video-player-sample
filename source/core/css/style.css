@@ -1,0 +1,382 @@
+/*
+Copyright 2011 Google
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+html, body {
+	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+	color: #FFF;
+	overflow: hidden;
+}
+
+
+/**
+ * Layout
+ * ======================================================== */
+
+
+body > header,
+.screen .header {
+	height: 47px;
+	width: 100%;
+}
+
+body > section {
+	position: absolute;
+	overflow: hidden;
+	height: auto;
+	width: 100%;
+	bottom: 55px;
+	top: 47px;
+}
+
+body > section > section {
+	position: relative;
+	overflow: hidden;
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+body > footer {
+	position: absolute;
+	bottom: 0px;
+	height: 55px;
+	width: 100%;
+	z-index: 3;
+}
+
+
+
+/**
+ * Load Screen
+ * ======================================================== */
+
+
+.load-screen {
+  position: fixed;
+  top: 47px;
+  bottom: 55px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.load-screen div {
+  width: 67px;
+  height: 70px;
+  margin: 225px auto 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.16);
+  -moz-box-shadow: 0px 1px 2px rgba(0,0,0,0.16);
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.16);
+}
+
+@-webkit-keyframes loading-loop {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+@-moz-keyframes loading-loop {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(360deg); }
+}
+@keyframes loading-loop {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.load-screen .icon {
+  width: 43px;
+  height: 43px;
+  position: static;
+  margin: 13px 0 0 12px;
+  background-position: -5px -55px;
+  
+  -webkit-animation-name: loading-loop; 
+  -webkit-animation-duration: 2s; 
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  
+  -moz-animation-name: loading-loop; 
+  -moz-animation-duration: 2s; 
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  
+  animation-name: loading-loop; 
+  animation-duration: 2s; 
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+
+
+/**
+ * Install/Upgrade/404 Screens
+ * ======================================================== */
+
+
+.screen, .not-found {
+  position: fixed;
+  top: 47px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  text-align: center;
+  padding-top: 143px;
+}
+
+.install {
+  display: none;
+}
+
+.screen article h3,
+.screen .article h3 {
+  font-size: 53px;
+  text-transform: none;
+  margin: 75px 0 15px 0;
+  font-weight: 900;
+  text-align: left;
+}
+
+.screen article p,
+.screen .article p {
+  font-size: 23px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.screen .header {
+  position: absolute;
+  top: -47px;
+  left: 0;
+}
+
+.no-js.screen .article p {
+  line-height: 28px;
+}
+
+.screen article p.small,
+.screen .article p.small {
+  font-size: 16px;
+  font-weight: normal;
+  font-style: italic;
+  line-height: 30px;
+  margin-bottom: 30px;
+}
+
+.screen figure,
+.screen .figure {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.screen article,
+.screen .article {
+  position: absolute;
+  left: 240px;
+  top: 0px;
+}
+
+.screen .wrapper {
+  width: 680px;
+  height: 350px;
+  margin: auto;
+  position: relative;
+}
+
+.screen figure .icon,
+.screen .figure .icon {
+  width: 244px;
+  height: 307px;
+  background-position: -250px -370px;
+}
+
+.screen a {
+  font-style: bold;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 44px;
+  text-indent: 25px;
+  text-decoration: none;
+  display: block;
+  width: 217px;
+  height: 44px;
+  background-position: -280px -325px;
+}
+
+.screen a:hover {
+  background-position: -280px -270px;
+}
+
+.screen a:active {
+  line-height: 46px;
+  background-position: -280px -215px;
+}
+
+.not-found .wrapper {
+  height: 600px;
+  width: 365px;
+  margin: auto;
+}
+
+.not-found figure {
+  background-position: -125px -690px;
+  width: 365px;
+  height: 307px;
+  text-indent: -999em;
+  color: transparent;
+  margin-bottom: 50px;
+}
+
+.not-found article div {
+  height: 1px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 84px;
+  margin: 0 4px;
+}
+
+
+
+/**
+ * Chrome Web Store Popup
+ * ======================================================== */
+
+.chrome-store-popup {
+  display: none;
+  position: fixed;
+  top: 213px;
+  left: 50%;
+  margin-left: -270px;
+  width: 539px;
+  height: 266px;
+  z-index: 10;
+  text-align: center;
+
+  -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.35);
+  -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.35);
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.35);
+  
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.chrome-store-popup div {
+  background-position: -80px -660px;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -12px;
+  right: -17px;
+  text-indent: -999em;
+  color: transparent;
+  cursor: pointer
+}
+
+.chrome-store-popup div:hover {
+  background-position: -80px -700px;
+}
+
+.chrome-store-popup div:active {
+  top: -11px;
+  background-position: -80px -740px;
+}
+
+.chrome-store-popup figure {
+  background-position: 0 -500px;
+  width: 125px;
+  height: 100px;
+  margin: 33px auto 10px;
+}
+
+.chrome-store-popup article {
+  text-align: center;
+}
+
+.chrome-store-popup article p {
+  font-size: 19px;
+  line-height: 25px;
+  color: #404040;
+  margin-bottom: 15px;
+}
+
+.chrome-store-popup article p strong {
+  font-weight: 900;
+}
+
+.chrome-store-popup article nav a:first-child {
+  margin-right: 10px;
+}
+
+.chrome-store-popup article nav a {
+  width: 142px;
+  height: 31px;
+  display: inline-block;
+  line-height: 31px;
+  font-size: 14px;
+  text-decoration: none;
+  
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  
+  -webkit-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.15);
+  -moz-box-shadow: inset 0px 1px 2px rgba(0,0,0,0.15);
+  box-shadow: inset 0px 1px 2px rgba(0,0,0,0.15);
+}
+
+.chrome-store-popup article nav a:active {
+  -webkit-box-shadow: inset 0px -1px 2px rgba(0,0,0,0.15);
+  -moz-box-shadow: inset 0px -1px 2px rgba(0,0,0,0.15);
+  box-shadow: inset 0px -1px 2px rgba(0,0,0,0.15);
+}
+
+.chrome-store-popup #do-inline-install {
+  cursor: pointer;
+}
+
+/**
+ * Sections
+ * ======================================================== */
+
+section > header {
+	padding: 27px 0px 0px 30px;
+}
+
+section > header h2 {
+  text-transform: none;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 45px;
+}
+
+
+
+/**
+ * Icons
+ * ======================================================== */
+
+.icon {
+	background-repeat: no-repeat;
+	background-color: transparent;
+	display: inline-block;
+}
+
+.icon.home   { height: 25px; width: 25px; background-position: -175px 0px; }
+.icon.shows  { height: 25px; width: 25px; background-position: -175px -25px; }
